@@ -1,14 +1,12 @@
+import logging
 from collections import namedtuple
+from datetime import datetime
+
 from recordclass import recordclass
 
-import search
-from capture import SIGHT_RANGE
-from captureAgents import CaptureAgent
-import random, util
-import game
 from AgentExternals import *
-import logging
-from datetime import datetime
+from captureAgents import CaptureAgent
+from game_code.capture import SIGHT_RANGE
 
 timestamp='{:%m-%d_%H.%M.%S}'.format(datetime.now())
 logger = logging.getLogger("base")

@@ -21,15 +21,15 @@
 -prune action sequences that takes us into many repeated positions when there isnt a significant increase in utility
 """
 
-from captureAgents import CaptureAgent
-import random, time, util
-from game import Directions
-import game
-from capture import GameState, SIGHT_RANGE
-from collections import namedtuple
-from time import time
+import random
+
 import search
+import util
 from AgentExternals import TeamData, PacmanPosSearch
+from captureAgents import CaptureAgent
+from game_code import game
+from game_code.capture import SIGHT_RANGE
+
 
 #################
 # Team creation #

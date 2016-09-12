@@ -20,12 +20,14 @@
 # John DeNero (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
 # For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
 
-from captureAgents import CaptureAgent
-import distanceCalculator
-import random, time, util, sys
+import random
+import util
+
 from game import Directions
-import game
+
+from captureAgents import CaptureAgent
 from util import nearestPoint
+
 
 #################
 # Team creation #

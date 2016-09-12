@@ -16,10 +16,11 @@
   Interfaces for capture agents and agent factories
 """
 
-from game import Agent
 import distanceCalculator
-from util import nearestPoint
 import util
+from game_code.game import Agent
+from util import nearestPoint
+
 
 # Note: the following class is not used, but is kept for backwards
 # compatibility with team submissions that try to import it.
@@ -125,7 +126,7 @@ class CaptureAgent(Agent):
   def debugDraw(self, cells, color, clear=False):
 
     if self.display:
-      from captureGraphicsDisplay import PacmanGraphics
+      from game_code.captureGraphicsDisplay import PacmanGraphics
       if isinstance(self.display, PacmanGraphics):
         if not type(cells) is list:
           cells = [cells]
@@ -133,7 +134,7 @@ class CaptureAgent(Agent):
 
   def debugClear(self):
     if self.display:
-      from captureGraphicsDisplay import PacmanGraphics
+      from game_code.captureGraphicsDisplay import PacmanGraphics
       if isinstance(self.display, PacmanGraphics):
         self.display.clearDebug()
 

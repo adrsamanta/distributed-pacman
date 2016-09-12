@@ -48,18 +48,19 @@ The keys are
   P1: 'a', 's', 'd', and 'w' to move
   P2: 'l', ';', ',' and 'p' to move
 """
-from game import GameStateData
-from game import Game
-from game import Directions
-from game import Actions
-from util import nearestPoint
+import imp
+import random
+import sys
+
+import util
+from game_code import keyboardAgents, textDisplay, mazeGenerator, layout
+from game_code.game import Actions
+from game_code.game import Configuration
+from game_code.game import Game
+from game_code.game import GameStateData
+from game_code.game import Grid
 from util import manhattanDistance
-from game import Grid
-from game import Configuration
-from game import Agent
-from game import reconstituteGrid
-import sys, util, types, time, random, imp
-import keyboardAgents
+from util import nearestPoint
 
 # If you change these, you won't affect the server, so you can't cheat
 KILL_POINTS = 0
@@ -847,17 +848,14 @@ def readCommand(argv):
     #   import pygameDisplay
     #    args['display'] = pygameDisplay.PacmanGraphics()
     if options.textgraphics:
-        import textDisplay
         args['display'] = textDisplay.PacmanGraphics()
     elif options.quiet:
-        import textDisplay
         args['display'] = textDisplay.NullGraphics()
     elif options.super_quiet:
-        import textDisplay
         args['display'] = textDisplay.NullGraphics()
         args['muteAgents'] = True
     else:
-        import captureGraphicsDisplay
+        from game_code import captureGraphicsDisplay
         # Hack for agents writing to the display
         captureGraphicsDisplay.FRAME_TIME = 0
         args['display'] = captureGraphicsDisplay.PacmanGraphics(options.red, options.blue, options.zoom, 0,
@@ -904,7 +902,6 @@ def readCommand(argv):
         args['agents'][index] = agent
 
     # Choose a layout
-    import layout
     layouts = []
     for i in range(options.numGames):
         if options.layout == 'RANDOM':
@@ -933,7 +930,6 @@ def randomLayout(seed=None):
         seed = random.randint(0, 99999999)
     # layout = 'layouts/random%08dCapture.lay' % seed
     # print 'Generating random layout in %s' % layout
-    import mazeGenerator
     return mazeGenerator.generateMaze(seed)
 
 
@@ -1007,7 +1003,6 @@ def runGames(layouts, agents, display, length, numGames, record, numTraining, re
         layout = layouts[i]
         if beQuiet:
             # Suppress output and graphics
-            import textDisplay
             gameDisplay = textDisplay.NullGraphics()
             rules.quiet = True
         else:
@@ -1019,7 +1014,7 @@ def runGames(layouts, agents, display, length, numGames, record, numTraining, re
 
         g.record = None
         if record:
-            import time, cPickle, game
+            import cPickle
             # fname = ('recorded-game-%d' % (i + 1)) +  '-'.join([str(t) for t in time.localtime()[1:6]])
             # f = file(fname, 'w')
             components = {'layout': layout, 'agents': [game.Agent() for a in agents], 'actions': g.moveHistory,

@@ -1,6 +1,7 @@
-import game
 import search
 import util
+from game_code import game
+
 
 class TeamData:
     RedData=None

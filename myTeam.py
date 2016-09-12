@@ -21,13 +21,16 @@
 -prune action sequences that takes us into many repeated positions when there isnt a significant increase in utility
 """
 
-from captureAgents import CaptureAgent
-import random, time, util
-from game import Directions
-import game
-from capture import GameState, SIGHT_RANGE
+import random
+import time
 from collections import namedtuple
 from time import time
+
+import util
+from captureAgents import CaptureAgent
+from game_code import game
+from game_code.capture import SIGHT_RANGE
+
 
 #################
 # Team creation #
@@ -311,7 +314,7 @@ class RealAgent(CaptureAgent):
         closestHomeDistance=5000
         #do some quick thinking on this state first, check for obvious good moves
         for action in gameState.getLegalActions(self.index):
-            newPos=game.Actions.getSuccessor(self.getMyPos(gameState), action)
+            newPos= game.Actions.getSuccessor(self.getMyPos(gameState), action)
             if self.getFood(gameState)[int(newPos[0])][int(newPos[1])] and (min([self.getDistanceToEnemy(gameState, i) for i in self.getOpponents(gameState)])>3 or self.getEnemyAgentScaredMovesRemaining(gameState)>3):
                 print "foodShort"
                 return action, 0

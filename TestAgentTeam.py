@@ -1,10 +1,7 @@
+import random
+
 from captureAgents import CaptureAgent
-import random, time, util
-from game import Directions
-import game
-from capture import GameState, SIGHT_RANGE
-from collections import namedtuple
-from time import time
+
 
 def createTeam(firstIndex, secondIndex, isRed,
                first='TestAgent', second='TestAgent'):
