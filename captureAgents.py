@@ -15,6 +15,7 @@
 """
   Interfaces for capture agents and agent factories
 """
+import random
 
 import distanceCalculator
 import util

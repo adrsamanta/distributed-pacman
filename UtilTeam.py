@@ -208,6 +208,10 @@ class UtilAgent(CaptureAgent):
                                        "my_scared_moves", "enemy_scared_moves", "my_food", "home_dist", "enemy_food",
                                        "safe_path_to_home"])
 
+    #TODO: add the following features:
+        #enemy distance to food
+        #enemy distance to capsule
+
     def getUtility(self, gamestate, belief_distrib):
 
         weights = self.getWeights(gamestate)
