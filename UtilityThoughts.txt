@@ -1,0 +1,55 @@
+
+
+-instead of picking the highest utility plan, it should pick the action of the 4 immediate possible that has the overall highest utility
+    -2 possible solutions
+        -explore each action in turn (go 4 deep out of up, down, left, right)
+        -iteratively deepen (explore all step 1 actions, then all step 2 from step 1s, etc)
+        -want to ensure we don't explore deeper in just 1 direction, and artificially boost that direction's utility
+    -discount future utility
+    -downside is that if going up is better 9/10 times, but down is WAY better 1/10 times, itll go up.
+        -this basically makes the agent risk averse.
+        -if better enough, itll pull the average up though, so it would actually go down
+            -advantage of mean over median
+
+-need to figure out how to deal with capturing enemy agents
+    -maybe just weight having no pacmen highly, and make sure it understands that eating the pacman makes it disappear
+        -removes the 1 to 0 utility gap
+    -this should implicitly weight lower distance better, which should make it go closer to pacmen if possible
+    -better idea would be to weight how much food the enemy has?
+
+-what features do we want?
+    distance to enemy ghosts
+        -I think this should be a binary feature
+    distance to enenmy pacmen
+        make sure that eating the pacmen (reducing the enemy food) causes a net gain in utility
+
+    distance to food
+        -distance problem
+    score
+    distance to nearest capsule
+        -distance problem
+    my scared moves remaining
+    enemy scared moves remaining
+    how much food I have
+    distance to home?
+        -standard problem with distance, going to 0 is actually pretty good
+    how much food the enemy has
+        -binary feature
+        -key is to make sure this goes to 0 when I eat an enemy
+    safe path to home exists?
+        This kinda captures the distance to enemy ghosts, but captures it in a better way
+        **since will need to find path from position to home, use this as the distance to home
+
+things that should affect decisions, but shouldnt necessarily factor directly into utility of a given place:
+    number of enemy pacmen
+    number of enemy ghosts
+    my scared mvoes remaining
+
+to deal with with distance problem, take reciprocal of distance,
+    ensure that result of distance hitting 0 is always greater than loss of utility from distance increase
+
+
+
+
+Found bugs:
+belief distribution in utility search is all 0s when it shouldnt be
