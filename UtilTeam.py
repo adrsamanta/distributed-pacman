@@ -206,7 +206,7 @@ class UtilAgent(CaptureAgent):
     # <editor-fold desc="Features/Weights stuff">
     Features = recordclass("Features", ["e_ghost_dist", "e_pac_dist", "food_dist", "capsule_dist", "score",
                                        "my_scared_moves", "enemy_scared_moves", "my_food", "home_dist", "enemy_food",
-                                       "safe_path_to_home"])
+                                       "safe_path_to_home", "e_dist_to_food"])
 
     #TODO: add the following features:
         #enemy distance to food
@@ -296,6 +296,7 @@ class UtilAgent(CaptureAgent):
         e_ghost_dists=[]
         e_pac_dists=[]
         e_food=[]
+        e_food_dist = []
         #do calculations that occur for each enemy
         for enemy in self.getOpponents(gamestate):
             # for each enemy, calculate the distance to them, then add that distance to the list corresponding to their mode
@@ -306,6 +307,9 @@ class UtilAgent(CaptureAgent):
                 e_ghost_dists.append(dist)
 
             e_food.append(gamestate.getAgentState(enemy).numCarrying)
+
+
+
         feat.e_ghost_dist = e_ghost_dists
         feat.e_pac_dist = e_pac_dists
 
@@ -593,6 +597,7 @@ class UtilAgent(CaptureAgent):
 
     # compares the most recent food log to the one before it, looking for any food that disappeared
     def checkFood(self):
+        #TODO: Appears to be a place this is tracked by game, look at capture.py line 555
         if len(self.data.defendFoodGrid) < 2:
             return False
         prevFood = self.data.defendFoodGrid[-2]
