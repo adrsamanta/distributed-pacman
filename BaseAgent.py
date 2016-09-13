@@ -72,13 +72,6 @@ class BaseAgent(CaptureAgent):
         else:
             return pos[0] >= halfway
 
-    def getDistToNearestCapsule(self, gameState):
-        try:
-            return min([self.getMazeDistance(gameState.getAgentState(self.index).getPosition(), cap) for cap in
-                        self.getCapsules(gameState)])
-        except ValueError:
-            return 0
-
     # calculates the most likely distance between spos and the given enemy, using the given belief distribution
     # if given belief distribution is None, it will use the current agent distribution
     # if the position of that enemy is known, then the exact distance is returned

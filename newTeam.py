@@ -106,10 +106,7 @@ class DummyAgent(CaptureAgent):
         return random.choice(actions)
 
 
-
-
-
-
+# NOTE this team performs rather poorly if you don't have to return home
 
 class HLA:
     #due to dependency issues, set the members of HLA inside HardwiredAgent
@@ -325,7 +322,7 @@ class HardwiredAgent(BaseAgent):
         target = max(self.getOpponents(gameState), key = lambda x : self.getFoodEatenByEnemyAgent(gameState, x))
         #dictionary where next positions are the keys, and the
         nextPosl = {game.Actions.getSuccessor(self.getMyPos(gameState), action) : action for action in gameState.getLegalActions(self.index)}
-        bestPos = min(nextPosl.keys(), key=lambda x: self.getDistToEnemy(x, target))
+        bestPos = min(nextPosl.keys(), key=lambda x: self.getDistanceToEnemy(x, target))
         #TODO: Make this not stupidly run  into enemy ghosts
         return nextPosl[bestPos] #return the action corresponding to bestpos
 
