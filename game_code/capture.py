@@ -365,7 +365,7 @@ def halfList(l, grid, red):
 ############################################################################
 
 COLLISION_TOLERANCE = 0.7  # How close ghosts must be to Pacman to kill
-
+MUST_RETURN_HOME = False
 
 class CaptureRules:
     """
@@ -505,7 +505,7 @@ class AgentRules:
             agentState.isPacman = [isRed, state.isRed(agentState.configuration)].count(True) == 1
             # if he's no longer pacman, he's on his own side, so reset the num carrying timer
             # agentState.numCarrying *= int(agentState.isPacman)
-            if agentState.numCarrying > 0 and not agentState.isPacman:
+            if agentState.numCarrying > 0 and not agentState.isPacman and MUST_RETURN_HOME:
                 score = agentState.numCarrying if isRed else -1 * agentState.numCarrying
                 state.data.scoreChange += score
 
@@ -542,14 +542,17 @@ class AgentRules:
                 teamIndicesFunc = state.getRedTeamIndices
 
             # go increase the variable for the pacman who ate this
-            agents = [state.data.agentStates[agentIndex] for agentIndex in teamIndicesFunc()]
-            for agent in agents:
-                if agent.getPosition() == position:
-                    agent.numCarrying += 1
-                    break  # the above should only be true for one agent...
+            if MUST_RETURN_HOME: #only if trying to return home
+                agents = [state.data.agentStates[agentIndex] for agentIndex in teamIndicesFunc()]
+                for agent in agents:
+                    if agent.getPosition() == position:
+                        agent.numCarrying += 1
+                        break  # the above should only be true for one agent...
 
             # do all the score and food grid maintainenace
-            # state.data.scoreChange += score
+            if not MUST_RETURN_HOME:
+                state.data.scoreChange += score
+
             state.data.food = state.data.food.copy()
             state.data.food[x][y] = False
             state.data._foodEaten = position
