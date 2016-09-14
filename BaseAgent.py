@@ -120,6 +120,32 @@ class BaseAgent(CaptureAgent):
         myPos = self.getMyPos(gameState)
         return self.data.borderDistances[myPos] if myPos in self.data.borderDistances else 0
 
+    def calcEnemyFoodDist(self, gamestate, enemyI, beliefs=None):
+        foodList = self.getFoodYouAreDefending(gamestate).asList()
+        if not foodList:
+            return 0
+        return min(self.getDistanceToEnemy(food, enemyI, beliefs) for food in foodList)
+
+    def calcEnemyCapsuleDist(self, gamestate, enemyI, beliefs=None):
+        try:
+            return min([self.getDistanceToEnemy(cap, enemyI, beliefs) for cap in
+                        self.getCapsulesYouAreDefending(gamestate)])
+        except ValueError:
+            return 0
+
+    def getEnemyDistToHome(self, gamestate, enemyI, beliefs=None):
+        if not gamestate.getAgentState(enemyI).isPacman:
+            return 0
+        elif not beliefs and enemyI in self.knownEnemies:
+            return self.data.e_borderDistances[self.knownEnemies[enemyI]]
+        else:
+            if not beliefs:
+                beliefs = self.getmDistribs(enemyI)
+
+            weighted_dists = [prob * self.data.e_borderDistances[epos] for epos, prob in beliefs.items() if prob > 0
+                              and epos in self.data.e_borderDistances]
+            if weighted_dists:
+                return sum(weighted_dists)
     # </editor-fold>
 
 

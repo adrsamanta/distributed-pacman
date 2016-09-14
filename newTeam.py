@@ -183,6 +183,28 @@ class HardwiredAgent(BaseAgent):
         self.displayDistributionsOverPositions(self.data.mDistribs)
         self.data.reset_food_target(self.index)
         bestAction = self.actionSearch(gameState)
+
+        e_ghost_dists = []
+        e_pac_dists = []
+        e_food = []
+        e_food_dist = []
+        e_capsule_dist = []
+        e_home_dist = []
+        # do calculations that occur for each enemy
+        for enemy in self.getOpponents(gameState):
+            # for each enemy, calculate the distance to them, then add that distance to the list corresponding to their mode
+            dist = self.getMyDistanceToEnemy(gameState, enemy)
+            if gameState.getAgentState(enemy).isPacman:
+                e_pac_dists.append(dist)
+            else:
+                e_ghost_dists.append(dist)
+            e_food_dist.append(self.calcEnemyFoodDist(gameState, enemy))
+            e_capsule_dist.append(self.calcEnemyCapsuleDist(gameState, enemy))
+
+            e_home_dist.append(self.getEnemyDistToHome(gameState, enemy))
+
+            e_food.append(gameState.getAgentState(enemy).numCarrying)
+
         # bestAction, utility= self.actionSearch(self.index, gameState)
         # newPos=game.Actions.getSuccessor(self.getMyPos(gameState), bestAction)
         # currFeatures=self.getFeatures(gameState)
@@ -218,7 +240,7 @@ class HardwiredAgent(BaseAgent):
         #         print "moved toward enemy"
         #         print "newpos=", newPos
         #         print "utility=", utility
-        if gameState.data.timeleft<1100:
+        if gameState.data.timeleft < 1000:
             # raw_input("Action="+bestAction)
             # print "\n"
             pass

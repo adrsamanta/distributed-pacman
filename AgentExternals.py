@@ -27,21 +27,38 @@ class TeamData:
 
 
         self.borderDistances={}
+        self.e_borderDistances = {}
         grid = gameState.getWalls()
         # since board size is even, but 0 indexed, width/2 is the boarder column on blue, so update halfway to match
         if not self.mAgent.red:
             halfway = (agent.getFood(gameState).width / 2)
             range_x = range(halfway)
+
+            e_halfway = (agent.getFood(gameState).width / 2) - 1
+            e_range_x = range(e_halfway, grid.width)
         else:
             halfway = (agent.getFood(gameState).width / 2) -1
             range_x = range(halfway, grid.width)
+
+            e_halfway = (agent.getFood(gameState).width / 2)
+            e_range_x = range(e_halfway)
+
         self.borderPositions = [(halfway, y) for y in range(agent.getFood(gameState).height) if
                                 not gameState.hasWall(halfway, y)]
+
+        self.e_borderPositions = [(e_halfway, y) for y in range(agent.getFood(gameState).height) if
+                                  not gameState.hasWall(e_halfway, y)]
         for x in range_x:
             for y in range(grid.height):
                 if not grid[x][y]:
                     self.borderDistances[(x, y)] = min(
                         self.mAgent.getMazeDistance((x, y), borderPos) for borderPos in self.borderPositions)
+
+        for x in e_range_x:
+            for y in range(grid.height):
+                if not grid[x][y]:
+                    self.e_borderDistances[(x, y)] = min(
+                        self.mAgent.getMazeDistance((x, y), borderPos) for borderPos in self.e_borderPositions)
 
                     #self.consideredStates = {}
         #track what food each agent is

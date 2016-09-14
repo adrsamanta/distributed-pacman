@@ -49,11 +49,9 @@ class LearnerBase(BaseAgent):
 
     Features = recordclass("Features", ["e_ghost_dist", "e_pac_dist", "food_dist", "capsule_dist", "score",
                                         "my_scared_moves", "enemy_scared_moves", "my_food", "home_dist", "enemy_food",
-                                        "safe_path_to_home", "e_dist_to_food"])
+                                        "safe_path_to_home", "e_dist_to_food", "e_dist_to_capsule", "e_dist_to_home"])
 
-    # TODO: add the following features:
-    # enemy distance to food
-    # enemy distance to capsule
+
 
 
     # features of the current position
@@ -64,6 +62,9 @@ class LearnerBase(BaseAgent):
         e_ghost_dists = []
         e_pac_dists = []
         e_food = []
+        e_food_dist = []
+        e_capsule_dist = []
+        e_home_dist = []
         # do calculations that occur for each enemy
         for enemy in self.getOpponents(gamestate):
             # for each enemy, calculate the distance to them, then add that distance to the list corresponding to their mode
@@ -72,6 +73,10 @@ class LearnerBase(BaseAgent):
                 e_pac_dists.append(dist)
             else:
                 e_ghost_dists.append(dist)
+            e_food_dist.append(self.calcEnemyFoodDist(gamestate, enemy))
+            e_capsule_dist.append(self.calcEnemyCapsuleDist(gamestate, enemy))
+
+            e_home_dist.append()
 
             e_food.append(gamestate.getAgentState(enemy).numCarrying)
 
