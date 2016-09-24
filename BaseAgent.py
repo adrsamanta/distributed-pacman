@@ -4,6 +4,34 @@ from game_code.capture import SIGHT_RANGE
 
 
 class BaseAgent(CaptureAgent):
+    def registerInitialState(self, gameState):
+        """
+        This method handles the initial setup of the
+        agent to populate useful fields (such as what team
+        we're on).
+
+        A distanceCalculator instance caches the maze distances
+        between each pair of positions, so your agents can use:
+        self.distancer.getDistance(p1, p2)
+
+        IMPORTANT: This method may run for at most 15 seconds.
+        """
+
+        CaptureAgent.registerInitialState(self, gameState)
+
+        # set up data repository
+        if self.red:
+            if not TeamData.RedData:
+                TeamData.RedData = TeamData(gameState, self.getTeam(gameState), self.getOpponents(gameState), self)
+            self.data = TeamData.RedData
+
+        else:
+            if not TeamData.BlueData:
+                TeamData.BlueData = TeamData(gameState, self.getTeam(gameState), self.getOpponents(gameState), self)
+            self.data = TeamData.BlueData
+
+        self.legalPositions = self.data.legalPositions
+
     # TODO: Check to see if this should be more utility-esque
     # creates exclusion zones around enemy ghosts
     def genExclusionZones(self, gamestate, beliefs=None):

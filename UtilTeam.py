@@ -31,14 +31,6 @@ def createTeam(firstIndex, secondIndex, isRed,
     team, initialized using firstIndex and secondIndex as their agent
     index numbers.  isRed is True if the red team is being created, and
     will be False if the blue team is being created.
-
-    As a potentially helpful development aid, this function can take
-    additional string-valued keyword arguments ("first" and "second" are
-    such arguments in the case of this function), which will come from
-    the --redOpts and --blueOpts command-line arguments to capture.py.
-    For the nightly contest, however, your team will be created without
-    any extra arguments, so you should make sure that the default
-    behavior is what you want for the nightly contest.
     """
 
     # The following line is an example only; feel free to change it.
@@ -52,45 +44,9 @@ class HLA:
     # calling each of these should just require passing in the current object as the self parameter
 
 
-class UtilAgent(BaseAgent):
+class UtilAgent(object, BaseAgent):
     def registerInitialState(self, gameState):
-        """
-        This method handles the initial setup of the
-        agent to populate useful fields (such as what team
-        we're on).
-
-        A distanceCalculator instance caches the maze distances
-        between each pair of positions, so your agents can use:
-        self.distancer.getDistance(p1, p2)
-
-        IMPORTANT: This method may run for at most 15 seconds.
-        """
-        # set the members of HLA to the HardwiredAgent methods
-        # HLA.goHome = HardwiredAgent.goHomeAction
-        # HLA.runAway = None
-        # HLA.eatFood = HardwiredAgent.eatFoodAction
-        # HLA.chaseEnemy = HardwiredAgent.chasePacmanAction
-        # HLA.eatCapsule = HardwiredAgent.eatCapsuleAction
-
-        '''
-        Make sure you do not delete the following line. If you would like to
-        use Manhattan distances instead of maze distances in order to save
-        on initialization time, please take a look at
-        CaptureAgent.registerInitialState in captureAgents.py.
-        '''
-        CaptureAgent.registerInitialState(self, gameState)
-        # set up data repository
-        if self.red:
-            if not TeamData.RedData:
-                TeamData.RedData = TeamData(gameState, self.getTeam(gameState), self.getOpponents(gameState), self)
-            self.data = TeamData.RedData
-
-        else:
-            if not TeamData.BlueData:
-                TeamData.BlueData = TeamData(gameState, self.getTeam(gameState), self.getOpponents(gameState), self)
-            self.data = TeamData.BlueData
-
-        self.legalPositions = self.data.legalPositions
+        super(UtilAgent).registerInitialState(gameState)
         self.offensive = self.data.getOffensive()
         if self.offensive:
             self.logger = logger

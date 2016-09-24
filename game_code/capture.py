@@ -765,7 +765,7 @@ def default(str):
 
 def parseAgentArgs(str):
     if str == None or str == '': return {}
-    pieces = str.split(',')
+    pieces = str.split(';')
     opts = {}
     for p in pieces:
         if '=' in p:

@@ -57,7 +57,7 @@ class CaptureAgent(Agent):
   # Methods to store key info #
   #############################
 
-  def __init__( self, index, timeForComputing = .1 ):
+  def __init__(self, index):
     """
     Lists several variables you can query:
     self.index = index for this agent
@@ -83,9 +83,6 @@ class CaptureAgent(Agent):
 
     # A history of observations
     self.observationHistory = []
-
-    # Time to spend each turn on computing maze distances
-    self.timeForComputing = timeForComputing
 
     # Access to the graphics
     self.display = None

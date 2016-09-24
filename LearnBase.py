@@ -76,13 +76,14 @@ class LearnerBase(BaseAgent):
             e_food_dist.append(self.calcEnemyFoodDist(gamestate, enemy))
             e_capsule_dist.append(self.calcEnemyCapsuleDist(gamestate, enemy))
 
-            e_home_dist.append()
+            e_home_dist.append(self.getEnemyDistToHome(gamestate, enemy))
 
             e_food.append(gamestate.getAgentState(enemy).numCarrying)
 
         feat.e_ghost_dist = e_ghost_dists
         feat.e_pac_dist = e_pac_dists
-
+        feat.e_dist_to_food = e_food_dist
+        feat.e_dist_to_capsule = e_capsule_dist
         feat.food_dist = self.calcFoodDist(gamestate)
 
         feat.capsule_dist = self.getDistToNearestCapsule(gamestate)
