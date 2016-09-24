@@ -4,9 +4,19 @@ import util
 from game_code import game
 
 
-def createTeam(firstIndex, secondIndex, isRed,
+def createTeam(firstIndex, secondIndex, isRed, weightvec1, weightvec2=None,
                first='GeneticAgent', second='GeneticAgent'):
-    return [eval(first)(firstIndex), eval(second)(secondIndex)]
+    def createWeights(vec):
+        weights = [float(f) for f in vec.split(",")]
+        return weights
+
+    floatvec1 = createWeights(weightvec1)
+    if weightvec2:
+        floatvec2 = createWeights(weightvec2)
+    else:
+        floatvec2 = createWeights(weightvec1)
+
+    return [eval(first)(firstIndex, floatvec1), eval(second)(secondIndex, floatvec2)]
 
 
 class GeneticAgent(object, LearnerBase):
@@ -15,7 +25,7 @@ class GeneticAgent(object, LearnerBase):
         self.weights = weights
 
     def getUtility(self, gamestate, beliefs):
-        features = self.getFeatures(gamestate, beliefs)
+        features = self.getFeatures(gamestate, beliefs, True)  # normalize to 2!
         utilVal = 0
         l_type = type([])
         for w, f in zip(self.weights, features):

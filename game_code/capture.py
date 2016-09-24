@@ -72,6 +72,8 @@ TOTAL_FOOD = 60
 
 DUMP_FOOD_ON_DEATH = True  # if we have the gameplay element that dumps dots on death
 
+MUST_RETURN_HOME = False  # if you have to return home for score to increase
+
 SCARED_TIME = 40
 
 
@@ -365,7 +367,7 @@ def halfList(l, grid, red):
 ############################################################################
 
 COLLISION_TOLERANCE = 0.7  # How close ghosts must be to Pacman to kill
-MUST_RETURN_HOME = False
+
 
 class CaptureRules:
     """
@@ -1044,6 +1046,12 @@ def save_score(game):
     with open('score', 'w') as f:
         print >> f, game.state.data.score
 
+
+def main_run():
+    options = readCommand(sys.argv[1:])  # Get game components based on input
+    games = runGames(**options)
+
+    return [game.state.data.score for game in games]
 
 if __name__ == '__main__':
     """

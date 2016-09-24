@@ -55,7 +55,7 @@ class LearnerBase(BaseAgent):
 
 
     # features of the current position
-    def getFeatures(self, gamestate, belief_distrib):
+    def getFeatures(self, gamestate, belief_distrib, normalize=False):
         # flesh with dummy values
         feat = LearnerBase.Features(*range(len(LearnerBase.Features._fields)))
 
@@ -94,15 +94,37 @@ class LearnerBase(BaseAgent):
         feat.enemy_food = e_food
 
         if self.onMySide(self.getMyPos(gamestate)):
-            feat.safe_path_to_home = True
+            feat.safe_path_to_home = 1
             feat.home_dist = 0
         else:
             path_home = self.goHomeAction(gamestate, belief_distrib)
             if path_home:
-                feat.safe_path_to_home = True
+                feat.safe_path_to_home = 1
                 feat.home_dist = len(path_home)
             else:
                 # no safe path home
-                feat.safe_path_to_home = False
+                feat.safe_path_to_home = 0
                 feat.home_dist = -1  # set to -1 to indicate bad value
+
+        if normalize:
+            max_f = 0
+            l_type = type([])
+            for f in feat:
+                if type(f) == l_type:
+                    tmp_max = max(f)
+                    if tmp_max > max_f:
+                        max_f = tmp_max
+
+                else:
+                    if f > max_f:
+                        max_f = f
+
+            # normalize to 2 for now
+
+            norm_const = max_f / 2.
+            for i, f in enumerate(feat):
+                if type(f) == l_type:
+                    feat[i] = [n / norm_const for n in f]
+                else:
+                    feat[i] = f / norm_const
         return feat
