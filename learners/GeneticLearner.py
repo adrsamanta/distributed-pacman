@@ -102,3 +102,14 @@ def evaluate(indiv):
 
     # assuming 4 agents, 0 is offensive, 2 is defensive, 1, 3 are enemies
     return score, off_food, e_food
+
+
+    # create function that takes in a mutation function, applies it to both vectors in the team, so can define
+    # toolbox.mutate functions via it, just call toolbox.mutate(indiv)
+    # also can create multiple mutations easily
+
+    # Do above for crossover as well
+    # does crossover between agent types occur or not?
+
+
+    # for selection, select the best 90%, mutate them amongst each other, keep the best 10% from previous gen unchanged (is that too high?)
