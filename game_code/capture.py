@@ -548,13 +548,20 @@ class AgentRules:
                 agents = [state.data.agentStates[agentIndex] for agentIndex in teamIndicesFunc()]
                 for agent in agents:
                     if agent.getPosition() == position:
+                        agent.numEaten += 1
                         agent.numCarrying += 1
                         break  # the above should only be true for one agent...
 
-            # do all the score and food grid maintainenace
+
             if not MUST_RETURN_HOME:
                 state.data.scoreChange += score
+                agents = [state.data.agentStates[agentIndex] for agentIndex in teamIndicesFunc()]
+                for agent in agents:
+                    if agent.getPosition() == position:
+                        agent.numEaten += 1
+                        break
 
+            # do all the score and food grid maintainenace
             state.data.food = state.data.food.copy()
             state.data.food[x][y] = False
             state.data._foodEaten = position
@@ -1047,11 +1054,15 @@ def save_score(game):
         print >> f, game.state.data.score
 
 
-def main_run():
-    options = readCommand(sys.argv[1:])  # Get game components based on input
-    games = runGames(**options)
+def get_score_and_food(game):
+    state_data = game.state.data
+    return (state_data.score, [a.numEaten for a in state_data.agentStates])
 
-    return [game.state.data.score for game in games]
+
+def main_run(command_opts):
+    options = readCommand(command_opts)  # Get game components based on input
+    games = runGames(**options)
+    return [get_score_and_food(game) for game in games]
 
 if __name__ == '__main__':
     """

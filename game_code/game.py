@@ -130,6 +130,9 @@ class AgentState:
         self.numCarrying = 0
         self.numReturned = 0
 
+        #####ALAN ADDITION###
+        self.numEaten = 0
+
     def __str__( self ):
         if self.isPacman:
             return "Pacman: " + str( self.configuration )

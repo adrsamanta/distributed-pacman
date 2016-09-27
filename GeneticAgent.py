@@ -3,11 +3,12 @@ from collections import namedtuple
 import util
 from game_code import game
 
+import re
 
 def createTeam(firstIndex, secondIndex, isRed, weightvec1, weightvec2=None,
                first='GeneticAgent', second='GeneticAgent'):
     def createWeights(vec):
-        weights = [float(f) for f in vec.split(",")]
+        weights = [float(f.group()) for f in re.finditer("\d", vec)]
         return weights
 
     floatvec1 = createWeights(weightvec1)

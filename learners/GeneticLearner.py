@@ -82,3 +82,23 @@ POP = 20
 # pops for score team
 toolbox.register("seeded_pop", initPopulation, list, toolbox.create_score_team, N_SEEDED, N_RAND)
 toolbox.register("pop", initPopulation, list, toolbox.create_score_team, 0, POP)
+
+
+def evaluate(indiv):
+    # if my team is red, will ALWAYS be indeces 0, 2. Also: weightvecs are assigned to agents in order
+    # so offensive agent is at index 0
+    red_team = ["-r", "GeneticAgent"]
+    blue_team = ["-b", "baselineTeam"]  # will play against baseline for now, can change later
+
+    red_opts = ["--redOpts", "weightvec1=" + str(indiv.offense), "weightvec2=" + str(indiv.defense)]
+
+    game_opts = ["-q"]  # no graphics, because no one there to watch!
+    score_food_list = capture.main_run(red_team + blue_team + red_opts)
+
+    # find the average values of these over all games
+    score = sum(s[0] for s in score_food_list) / len(score_food_list)  # avg score over all games
+    off_food = sum(s[1][0] for s in score_food_list) / len(score_food_list)
+    e_food = sum(s[1][1] + s[1][3] for s in score_food_list) / len(score_food_list)
+
+    # assuming 4 agents, 0 is offensive, 2 is defensive, 1, 3 are enemies
+    return score, off_food, e_food
