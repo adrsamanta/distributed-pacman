@@ -6,7 +6,7 @@ import LearnBase
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
 
 
-class Team:
+class Team(object):
     def __init__(self, off, defe):
         self.offense = off
         self.defense = defe
@@ -81,4 +81,4 @@ POP = 20
 
 # pops for score team
 toolbox.register("seeded_pop", initPopulation, list, toolbox.create_score_team, N_SEEDED, N_RAND)
-toolbox.register("pop", tools.initRepeat, list, creator.create_score_team, n=POP)
+toolbox.register("pop", initPopulation, list, toolbox.create_score_team, 0, POP)
