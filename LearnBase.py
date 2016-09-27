@@ -47,6 +47,7 @@ class LearnerBase(BaseAgent):
         self.data.logFood(gameState)
         self.updatePosDist(gameState)
 
+    # NOTE: POPULATION INITIATION DEPENDS ON THESE NOT MOVING AROUND
     Features = recordclass("Features", ["e_ghost_dist", "e_pac_dist", "food_dist", "capsule_dist", "score",
                                         "my_scared_moves", "enemy_scared_moves", "my_food", "home_dist", "enemy_food",
                                         "safe_path_to_home", "e_dist_to_food", "e_dist_to_capsule", "e_dist_to_home"])
