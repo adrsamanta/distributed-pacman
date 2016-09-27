@@ -130,7 +130,7 @@ class HardwiredAgent(BaseAgent):
         IMPORTANT: This method may run for at most 15 seconds.
         """
         #set the members of HLA to the HardwiredAgent methods
-        HLA.goHome = HardwiredAgent.goHomeAction
+        HLA.goHome = HardwiredAgent.pathToHome
         HLA.runAway = None
         HLA.eatFood = HardwiredAgent.eatFoodAction
         HLA.chaseEnemy = HardwiredAgent.chasePacmanAction
@@ -269,7 +269,7 @@ class HardwiredAgent(BaseAgent):
         return hla(self, gameState)
 
     #called when the agent should procede home
-    def goHomeAction(self, gamestate):
+    def pathToHome(self, gamestate):
         print "Going home"
         #find shortest path to home
         #generate exclusion zones around the enemies, find shortest path that doesn't go through an exclusion zone

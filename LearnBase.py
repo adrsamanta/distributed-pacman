@@ -97,7 +97,7 @@ class LearnerBase(BaseAgent):
             feat.safe_path_to_home = 1
             feat.home_dist = 0
         else:
-            path_home = self.goHomeAction(gamestate, belief_distrib)
+            path_home = self.pathToHome(gamestate, belief_distrib)
             if path_home:
                 feat.safe_path_to_home = 1
                 feat.home_dist = len(path_home)

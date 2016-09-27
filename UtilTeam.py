@@ -282,7 +282,7 @@ class UtilAgent(object, BaseAgent):
             feat.safe_path_to_home=True
             feat.home_dist=0
         else:
-            path_home = self.goHomeAction(gamestate, belief_distrib)
+            path_home = self.pathToHome(gamestate, belief_distrib)
             if path_home:
                 feat.safe_path_to_home = True
                 feat.home_dist = len(path_home)
@@ -303,7 +303,8 @@ class UtilAgent(object, BaseAgent):
 
 
         # called when the agent should procede home
-    def goHomeAction(self, gamestate, beliefs):
+
+    def pathToHome(self, gamestate, beliefs):
 
         # find shortest path to home
         # generate exclusion zones around the enemies, find shortest path that doesn't go through an exclusion zone

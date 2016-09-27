@@ -59,6 +59,36 @@ class BaseAgent(CaptureAgent):
 
         return zone
 
+    def pathToHome(self, gamestate, beliefs):
+
+        # find shortest path to home
+        # generate exclusion zones around the enemies, find shortest path that doesn't go through an exclusion zone
+
+        ez = self.genExclusionZones(gamestate, beliefs)
+
+        goHomeProb = PacmanPosSearch(self.getMyPos(gamestate), self.data.borderPositions, gamestate, ez)
+
+        def heuristic(state, problem):
+            if state in self.data.borderDistances:
+                return self.data.borderDistances[state]
+            else:
+                return 0
+
+        path, _ = search.astar(goHomeProb, heuristic)
+        if not path:
+            # # relax the exclusion zones to only be where the enemy is
+            # ghp2 = PacmanPosSearch(self.getMyPos(gamestate), self.data.borderPositions, gamestate,
+            #                        list(self.knownEnemies.values()))
+            # path, _ = search.astar(ghp2, heuristic)
+            # if not path:
+            #     # still no path home, probably screwed, just stop and pray
+            #     path = [game.Directions.STOP]  # just wait, because can't go anywhere
+            # # hollup
+            pass
+        return path  # return the first action in the path
+
+
+
     #######################################
     #        Utility Info Functions
     #######################################
