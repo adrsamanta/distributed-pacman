@@ -52,6 +52,8 @@ class LearnerBase(BaseAgent):
                                         "my_scared_moves", "enemy_scared_moves", "my_food", "home_dist", "enemy_food",
                                         "safe_path_to_home", "e_dist_to_food", "e_dist_to_capsule", "e_dist_to_home"])
 
+    # todo features to add:
+    # distance to own food
 
 
 

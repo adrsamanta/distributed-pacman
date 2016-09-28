@@ -1,16 +1,33 @@
-from deap import tools, creator, base
+from datetime import datetime
+import numpy
+from deap import tools, creator, base, algorithms
 from game_code import capture
 import random
 import LearnBase
+import copy
 
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
 
+N_SEEDED = 20  # number of seeded individuals in population at start
+N_RAND = 20  # number of randomly generated individuals in population
+POP = N_SEEDED + N_RAND  # number of individuals in the total pop
+
+NGEN = 100  # number of generations
+CXPB = .5  # crossover probability
+MUTPB = .5  # mutation probability
+INDPB = .4  # probability of mutating a given feature
 
 class Team(object):
     def __init__(self, off, defe):
         self.offense = off
         self.defense = defe
 
+    def __copy__(self):
+        return Team(self.offense, self.defense)
+
+    def __deepcopy__(self, memodict={}):
+        return Team(copy.deepcopy(self.offense), copy.deepcopy(self.defense))
+        #defined for safety, to make sure copying will work properly
 
 # weight structure:
 # (score_weight, Amt of food eaten by offensive agent, amt of food eaten by enemy)
@@ -44,7 +61,6 @@ def create_seeded_ind(ind_init):
 
 
 # should agent 1 be seeded, should agent 2 be seeded, what team are we using
-
 def create_same_team(seed, team):
     return create_team(seed, seed, team)
 
@@ -75,9 +91,7 @@ def initPopulation(pcls, team, n_seed, n_rand):
 
 
 
-N_SEEDED = 10
-N_RAND = 10
-POP = 20
+
 
 # pops for score team
 toolbox.register("seeded_pop", initPopulation, list, toolbox.create_score_team, N_SEEDED, N_RAND)
@@ -104,12 +118,72 @@ def evaluate(indiv):
     return score, off_food, e_food
 
 
-    # create function that takes in a mutation function, applies it to both vectors in the team, so can define
-    # toolbox.mutate functions via it, just call toolbox.mutate(indiv)
-    # also can create multiple mutations easily
+# apply a crossover algorithm to the 2 individuals
+def apply_cx(ind1, ind2, cx):
+    cx(ind1.offense, ind2.offense)
+    cx(ind1.defense, ind2.defense)
 
-    # Do above for crossover as well
-    # does crossover between agent types occur or not?
+    return ind1, ind2
 
 
-    # for selection, select the best 90%, mutate them amongst each other, keep the best 10% from previous gen unchanged (is that too high?)
+# apply a mutation algorithm to the individual
+def apply_mut(ind1, mut):
+    mut(ind1.offense)
+    mut(ind1.defense)
+    return ind1
+
+
+toolbox.register("cxblend", tools.cxBlend, alpha=.5)
+toolbox.register("mutgauss", tools.mutGaussian, mu=0, sigma=.5, indpb=INDPB)
+
+toolbox.register("mate", apply_cx, cx=toolbox.cxblend)
+toolbox.register("mutate", apply_mut, mut=toolbox.mutgauss)
+toolbox.register("select", tools.selBest)
+
+stats = tools.Statistics(key=lambda ind: ind.fitness.values)
+stats.register("avg", numpy.mean, axis=0)
+stats.register("std", numpy.std, axis=0)
+stats.register("min", numpy.min, axis=0)
+stats.register("max", numpy.max, axis=0)
+
+logbook = tools.Logbook()
+
+pop = toolbox.seeded_pop()
+
+
+def doEval(individuals):
+    invalid_ind = [ind for ind in individuals if not ind.fitness.valid]
+    fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+    for ind, fit in zip(invalid_ind, fitnesses):
+        ind.fitness.values = fit
+
+
+# do initial evaluation:
+doEval(pop)
+
+logbook.record(gen=-1, **stats.compile(pop))
+
+for g in range(NGEN):
+    breeder_len = int(.9 * len(pop))
+    keep_len = len(pop) - breeder_len
+    keepers = tools.selBest(pop, keep_len)
+    # copy the breeders
+    # breeders=toolbox.map(toolbox.clone, toolbox.select(pop, breeder_len)) (not needed b/c of varAnd)
+
+    offspring = algorithms.varAnd(toolbox.select(pop, breeder_len), toolbox, CXPB, MUTPB)
+
+    doEval(offspring)
+
+    pop = keepers + offspring
+    logbook.record(gen=g, **stats.compile(pop))
+
+timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
+log_file_name = timestamp + "_log.txt"
+pop_file_name = timestamp + "_pop.txt"
+import pickle
+
+with open(log_file_name, "w") as log_file:
+    pickle.dump(logbook, log_file)
+
+with open(pop_file_name, "w") as pop_file:
+    pickle.dump(pop, pop_file)
