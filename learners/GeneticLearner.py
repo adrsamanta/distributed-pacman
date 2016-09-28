@@ -106,7 +106,7 @@ def evaluate(indiv):
 
     red_opts = ["--redOpts", "weightvec1=" + str(indiv.offense), "weightvec2=" + str(indiv.defense)]
 
-    game_opts = ["-q"]  # no graphics, because no one there to watch!
+    game_opts = ["-q -c"]  # no graphics, because no one there to watch! also catch exceptions
     score_food_list = capture.main_run(red_team + blue_team + red_opts)
 
     # find the average values of these over all games
