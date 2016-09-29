@@ -8,7 +8,7 @@ import copy
 
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
 
-N_SEEDED = 10  # number of seeded individuals in population at start
+N_SEEDED = 5  # number of seeded individuals in population at start
 N_RAND = 0  # number of randomly generated individuals in population
 POP = N_SEEDED + N_RAND  # number of individuals in the total pop
 
