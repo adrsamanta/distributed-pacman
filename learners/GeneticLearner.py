@@ -8,8 +8,8 @@ import copy
 
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
 
-N_SEEDED = 20  # number of seeded individuals in population at start
-N_RAND = 20  # number of randomly generated individuals in population
+N_SEEDED = 5  # number of seeded individuals in population at start
+N_RAND = 5  # number of randomly generated individuals in population
 POP = N_SEEDED + N_RAND  # number of individuals in the total pop
 
 NGEN = 100  # number of generations
@@ -87,7 +87,7 @@ toolbox.register("create_defense_team", create_same_team, team=creator.DefenseTe
 def initPopulation(pcls, team, n_seed, n_rand):
     pop = [team(True) for i in range(n_seed)]
     rand_pop = [team(False) for i in range(n_rand)]
-    pcls(pop + rand_pop)
+    return pcls(pop + rand_pop)
 
 
 
@@ -104,10 +104,10 @@ def evaluate(indiv):
     red_team = ["-r", "GeneticAgent"]
     blue_team = ["-b", "baselineTeam"]  # will play against baseline for now, can change later
 
-    red_opts = ["--redOpts", "weightvec1=" + str(indiv.offense), "weightvec2=" + str(indiv.defense)]
+    red_opts = ["--redOpts", "weightvec1=" + str(indiv.offense) + ";weightvec2=" + str(indiv.defense)]
 
-    game_opts = ["-q -c"]  # no graphics, because no one there to watch! also catch exceptions
-    score_food_list = capture.main_run(red_team + blue_team + red_opts)
+    game_opts = ["-q", "-c"]  # no graphics, because no one there to watch! also catch exceptions
+    score_food_list = capture.main_run(red_team + blue_team + red_opts + game_opts)
 
     # find the average values of these over all games
     score = sum(s[0] for s in score_food_list) / len(score_food_list)  # avg score over all games
@@ -139,6 +139,7 @@ toolbox.register("mutgauss", tools.mutGaussian, mu=0, sigma=.5, indpb=INDPB)
 toolbox.register("mate", apply_cx, cx=toolbox.cxblend)
 toolbox.register("mutate", apply_mut, mut=toolbox.mutgauss)
 toolbox.register("select", tools.selBest)
+toolbox.register("evaluate", evaluate)
 
 stats = tools.Statistics(key=lambda ind: ind.fitness.values)
 stats.register("avg", numpy.mean, axis=0)

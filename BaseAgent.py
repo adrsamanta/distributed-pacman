@@ -3,7 +3,7 @@ from captureAgents import CaptureAgent
 from game_code.capture import SIGHT_RANGE
 
 
-class BaseAgent(CaptureAgent):
+class BaseAgent(object, CaptureAgent):
     def registerInitialState(self, gameState):
         """
         This method handles the initial setup of the

@@ -114,9 +114,10 @@ class LearnerBase(BaseAgent):
             l_type = type([])
             for f in feat:
                 if type(f) == l_type:
-                    tmp_max = max(f)
-                    if tmp_max > max_f:
-                        max_f = tmp_max
+                    if f:
+                        tmp_max = max(f)
+                        if tmp_max > max_f:
+                            max_f = tmp_max
 
                 else:
                     if f > max_f:

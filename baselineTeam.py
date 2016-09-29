@@ -23,7 +23,7 @@
 import random
 import util
 
-from game import Directions
+from game_code.game import Directions
 
 from captureAgents import CaptureAgent
 from util import nearestPoint

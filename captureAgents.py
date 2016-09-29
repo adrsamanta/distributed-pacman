@@ -69,6 +69,9 @@ class CaptureAgent(Agent):
     self.timeForComputing = an amount of time to give each turn for computing maze distances
         (part of the provided distance calculator)
     """
+    self.initSetup(index)
+
+  def initSetup(self, index):
     # Agent index for querying state
     self.index = index
 
@@ -166,6 +169,7 @@ class CaptureAgent(Agent):
     the time limit (otherwise a random legal action will be chosen for you).
     """
     util.raiseNotDefined()
+    # pass
 
   #######################
   # Convenience Methods #

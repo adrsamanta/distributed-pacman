@@ -1,6 +1,7 @@
 from LearnBase import LearnerBase
 from collections import namedtuple
 import util
+from captureAgents import CaptureAgent
 from game_code import game
 
 import re
@@ -20,10 +21,16 @@ def createTeam(firstIndex, secondIndex, isRed, weightvec1, weightvec2=None,
     return [eval(first)(firstIndex, floatvec1), eval(second)(secondIndex, floatvec2)]
 
 
-class GeneticAgent(object, LearnerBase):
+class GeneticAgent(LearnerBase):
     def __init__(self, index, weights):
-        super(GeneticAgent).__init__(index)
+        self.initSetup(index)
         self.weights = weights
+
+    def chooseAction(self, gameState):
+        # super(LearnerBase, self).chooseAction(gameState)
+        LearnerBase.chooseAction(self, gameState)
+        action = self.action_search(gameState)
+        return action
 
     def getUtility(self, gamestate, beliefs):
         features = self.getFeatures(gamestate, beliefs, True)  # normalize to 2!
@@ -83,7 +90,9 @@ class GeneticAgent(object, LearnerBase):
                 successor_actions = ns.gamestate.getLegalActions(self.index)
                 if len(
                         successor_actions) > 1:  # if there are several subsequent actions, remove the 'double back' option
-                    successor_actions.remove(game.Actions.reverseDirection(ns.prev_action))
+                    reverse = game.Actions.reverseDirection(ns.prev_action)
+                    if reverse in successor_actions:
+                        successor_actions.remove(reverse)
                 # the above code should, in the case that we went north to get here, and we can go either north or south
                 # remove the option "south" from legal actions, so we do not needlessly double back
                 # if however we entered a dead end, and we can thus only double back, it allows that to occur
@@ -118,3 +127,4 @@ class GeneticAgent(object, LearnerBase):
         nb = [None] * len(oldBeliefs)
         for i in self.getOpponents(gamestate):
             nb[i] = self.positionMoveInfer(i, gamestate, oldBeliefs[i])
+        return nb
