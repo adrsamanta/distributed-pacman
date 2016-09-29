@@ -8,8 +8,8 @@ import copy
 
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
 
-N_SEEDED = 5  # number of seeded individuals in population at start
-N_RAND = 5  # number of randomly generated individuals in population
+N_SEEDED = 10  # number of seeded individuals in population at start
+N_RAND = 0  # number of randomly generated individuals in population
 POP = N_SEEDED + N_RAND  # number of individuals in the total pop
 
 NGEN = 100  # number of generations
@@ -22,11 +22,11 @@ class Team(object):
         self.offense = off
         self.defense = defe
 
-    def __copy__(self):
-        return Team(self.offense, self.defense)
-
-    def __deepcopy__(self, memodict={}):
-        return Team(copy.deepcopy(self.offense), copy.deepcopy(self.defense))
+        # def __copy__(self):
+        #     return Team(self.offense, self.defense)
+        #
+        # def __deepcopy__(self, memodict={}):
+        #     return Team(copy.deepcopy(self.offense), copy.deepcopy(self.defense))
         #defined for safety, to make sure copying will work properly
 
 # weight structure:
@@ -106,7 +106,7 @@ def evaluate(indiv):
 
     red_opts = ["--redOpts", "weightvec1=" + str(indiv.offense) + ";weightvec2=" + str(indiv.defense)]
 
-    game_opts = ["-q", "-c"]  # no graphics, because no one there to watch! also catch exceptions
+    game_opts = ["-q", "-c", "-l", "tinyCapture"]  # no graphics, because no one there to watch! also catch exceptions
     score_food_list = capture.main_run(red_team + blue_team + red_opts + game_opts)
 
     # find the average values of these over all games
@@ -130,7 +130,7 @@ def apply_cx(ind1, ind2, cx):
 def apply_mut(ind1, mut):
     mut(ind1.offense)
     mut(ind1.defense)
-    return ind1
+    return (ind1,)
 
 
 toolbox.register("cxblend", tools.cxBlend, alpha=.5)
@@ -140,6 +140,13 @@ toolbox.register("mate", apply_cx, cx=toolbox.cxblend)
 toolbox.register("mutate", apply_mut, mut=toolbox.mutgauss)
 toolbox.register("select", tools.selBest)
 toolbox.register("evaluate", evaluate)
+
+
+def fake_eval(indiv):
+    return 10 * random.random(), 10, 10
+
+
+# toolbox.register("evaluate", fake_eval)
 
 stats = tools.Statistics(key=lambda ind: ind.fitness.values)
 stats.register("avg", numpy.mean, axis=0)

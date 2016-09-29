@@ -93,6 +93,10 @@ class GeneticAgent(LearnerBase):
                     reverse = game.Actions.reverseDirection(ns.prev_action)
                     if reverse in successor_actions:
                         successor_actions.remove(reverse)
+                    else:
+                        # we've been eaten! lol
+                        # print "reverse not in successor actions??", reverse, ns.prev_action, successor_actions
+                        pass
                 # the above code should, in the case that we went north to get here, and we can go either north or south
                 # remove the option "south" from legal actions, so we do not needlessly double back
                 # if however we entered a dead end, and we can thus only double back, it allows that to occur
