@@ -29,14 +29,32 @@ class Team(object):
         #     return Team(copy.deepcopy(self.offense), copy.deepcopy(self.defense))
         #defined for safety, to make sure copying will work properly
 
+
+# redefine the getter so that 0 weights are allowed
+class Fitness0(base.Fitness):
+    def getValues(self):
+        ###Need to make this not fuck up when a weight is 0
+        def div2(v1, v2):
+            if v1 == 0 or v2 == 0:
+                return 0
+            else:
+                return v1 / v2
+
+        return tuple(map(div2, self.wvalues, self.weights))
+
+    values = property(getValues, base.Fitness.setValues, base.Fitness.delValues,
+                      ("Fitness values. Use directly ``individual.fitness.values = values`` "
+                       "in order to set the fitness and ``del individual.fitness.values`` "
+                       "in order to clear (invalidate) the fitness. The (unweighted) fitness "
+                       "can be directly accessed via ``individual.fitness.values``."))
+
 # weight structure:
 # (score_weight, Amt of food eaten by offensive agent, amt of food eaten by enemy)
-
-creator.create("ScoreMax", base.Fitness, weights=(1.0, 0.0, 0.0))
+creator.create("ScoreMax", Fitness0, weights=(1.0, 0.0, 0.0))
 # teams optimized with below fitnesses will only care about how well the offensive or defensive agent does
 # so when picking best offensive/defensive agents, just pick best teams with these fitnesses
-creator.create("AteFoodMax", base.Fitness, weights=(0., 1., 0.))
-creator.create("EFoodMin", base.Fitness, weights=(0., 0., -1.))
+creator.create("AteFoodMax", Fitness0, weights=(0., 1., 0.))
+creator.create("EFoodMin", Fitness0, weights=(0., 0., -1.))
 
 creator.create("ScoreTeam", Team, fitness=creator.ScoreMax)
 creator.create("OffenseTeam", Team, fitness=creator.AteFoodMax)
@@ -139,14 +157,16 @@ toolbox.register("mutgauss", tools.mutGaussian, mu=0, sigma=.5, indpb=INDPB)
 toolbox.register("mate", apply_cx, cx=toolbox.cxblend)
 toolbox.register("mutate", apply_mut, mut=toolbox.mutgauss)
 toolbox.register("select", tools.selBest)
-toolbox.register("evaluate", evaluate)
+
+
+# toolbox.register("evaluate", evaluate)
 
 
 def fake_eval(indiv):
     return 10 * random.random(), 10, 10
 
 
-# toolbox.register("evaluate", fake_eval)
+toolbox.register("evaluate", fake_eval)
 
 stats = tools.Statistics(key=lambda ind: ind.fitness.values)
 stats.register("avg", numpy.mean, axis=0)
