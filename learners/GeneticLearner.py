@@ -4,6 +4,7 @@ from deap import tools, creator, base, algorithms
 from game_code import capture
 import random
 import LearnBase
+import multiprocessing
 import copy
 
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
@@ -12,7 +13,7 @@ N_SEEDED = 5  # number of seeded individuals in population at start
 N_RAND = 0  # number of randomly generated individuals in population
 POP = N_SEEDED + N_RAND  # number of individuals in the total pop
 
-NGEN = 100  # number of generations
+NGEN = 10  # number of generations
 CXPB = .5  # crossover probability
 MUTPB = .5  # mutation probability
 INDPB = .4  # probability of mutating a given feature
@@ -159,14 +160,13 @@ toolbox.register("mutate", apply_mut, mut=toolbox.mutgauss)
 toolbox.register("select", tools.selBest)
 
 
-# toolbox.register("evaluate", evaluate)
-
-
 def fake_eval(indiv):
     return 10 * random.random(), 10, 10
 
 
-toolbox.register("evaluate", fake_eval)
+# toolbox.register("evaluate", fake_eval)
+toolbox.register("evaluate", evaluate)
+
 
 stats = tools.Statistics(key=lambda ind: ind.fitness.values)
 stats.register("avg", numpy.mean, axis=0)
@@ -186,32 +186,43 @@ def doEval(individuals):
         ind.fitness.values = fit
 
 
-# do initial evaluation:
-doEval(pop)
+if __name__ == '__main__':
+    pool = multiprocessing.Pool()
+    toolbox.register("map", pool.map)
 
-logbook.record(gen=-1, **stats.compile(pop))
+    # do initial evaluation:
+    doEval(pop)
 
-for g in range(NGEN):
-    breeder_len = int(.9 * len(pop))
-    keep_len = len(pop) - breeder_len
-    keepers = tools.selBest(pop, keep_len)
-    # copy the breeders
-    # breeders=toolbox.map(toolbox.clone, toolbox.select(pop, breeder_len)) (not needed b/c of varAnd)
+    logbook.record(gen=-1, **stats.compile(pop))
+    print "starting iteration"
+    for g in range(NGEN):
+        print "starting generation ", g
+        breeder_len = int(.9 * len(pop))
+        keep_len = len(pop) - breeder_len
+        keepers = tools.selBest(pop, keep_len)
+        # copy the breeders
+        # breeders=toolbox.map(toolbox.clone, toolbox.select(pop, breeder_len)) (not needed b/c of varAnd)
 
-    offspring = algorithms.varAnd(toolbox.select(pop, breeder_len), toolbox, CXPB, MUTPB)
+        offspring = algorithms.varAnd(toolbox.select(pop, breeder_len), toolbox, CXPB, MUTPB)
 
-    doEval(offspring)
+        doEval(offspring)
 
-    pop = keepers + offspring
-    logbook.record(gen=g, **stats.compile(pop))
+        pop = keepers + offspring
+        logbook.record(gen=g, **stats.compile(pop))
 
-timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
-log_file_name = timestamp + "_log.txt"
-pop_file_name = timestamp + "_pop.txt"
-import pickle
+    timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
+    log_file_name = timestamp + "_log.txt"
+    pop_file_name = timestamp + "_pop.txt"
+    import pickle
 
-with open(log_file_name, "w") as log_file:
-    pickle.dump(logbook, log_file)
+    with open(log_file_name, "w") as log_file:
+        pickle.dump(logbook, log_file)
 
-with open(pop_file_name, "w") as pop_file:
-    pickle.dump(pop, pop_file)
+    with open(pop_file_name, "w") as pop_file:
+        pickle.dump(pop, pop_file)
+
+    record = stats.compile(pop)
+    for k, v in record.iteritems():
+        print k, v
+
+    print "DONE"
