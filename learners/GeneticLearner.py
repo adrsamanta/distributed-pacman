@@ -7,16 +7,31 @@ import LearnBase
 import multiprocessing
 import copy
 
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-ngen", type=int, default=100)
+parser.add_argument("--seed", "-s", type=int, required=True)
+parser.add_argument("--rand", "-r", type=int, required=True)
+parser.add_argument("-cxpb", type=float, default=.5)
+parser.add_argument("-mutpb", type=float, default=.5)
+parser.add_argument("-indpb", type=float, default=.4)
+parser.add_argument("-d", action="store_true")
+
+args = parser.parse_args()
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
 
-N_SEEDED = 5  # number of seeded individuals in population at start
-N_RAND = 0  # number of randomly generated individuals in population
+N_SEEDED = args.seed  # number of seeded individuals in population at start
+N_RAND = args.rand  # number of randomly generated individuals in population
 POP = N_SEEDED + N_RAND  # number of individuals in the total pop
 
-NGEN = 10  # number of generations
-CXPB = .5  # crossover probability
-MUTPB = .5  # mutation probability
-INDPB = .4  # probability of mutating a given feature
+NGEN = args.ngen  # number of generations
+CXPB = args.cxpb  # crossover probability
+MUTPB = args.mutpb  # mutation probability
+INDPB = args.indpb  # probability of mutating a given feature
+
+debug = args.d
 
 class Team(object):
     def __init__(self, off, defe):
@@ -164,8 +179,10 @@ def fake_eval(indiv):
     return 10 * random.random(), 10, 10
 
 
-# toolbox.register("evaluate", fake_eval)
-toolbox.register("evaluate", evaluate)
+if debug:
+    toolbox.register("evaluate", fake_eval)
+else:
+    toolbox.register("evaluate", evaluate)
 
 
 stats = tools.Statistics(key=lambda ind: ind.fitness.values)
