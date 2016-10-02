@@ -227,7 +227,7 @@ if __name__ == '__main__':
 
         pop = keepers + offspring
         logbook.record(gen=g, **stats.compile(pop))
-
+    print "logbook length ", len(logbook)
     timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
     log_file_name = timestamp + "_log.txt"
     pop_file_name = timestamp + "_pop.txt"

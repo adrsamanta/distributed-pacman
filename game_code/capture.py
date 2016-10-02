@@ -895,9 +895,9 @@ def readCommand(argv):
         redArgs['numTraining'] = options.numTraining
         blueArgs['numTraining'] = options.numTraining
     nokeyboard = options.textgraphics or options.quiet or options.numTraining > 0
-    print '\nRed team %s with %s:' % (options.red, redArgs)
+    # print '\nRed team %s with %s:' % (options.red, redArgs)
     redAgents = loadAgents(True, options.red, nokeyboard, redArgs)
-    print '\nBlue team %s with %s:' % (options.blue, blueArgs)
+    # print '\nBlue team %s with %s:' % (options.blue, blueArgs)
     blueAgents = loadAgents(False, options.blue, nokeyboard, blueArgs)
     args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)], [])  # list of agents
 
@@ -964,7 +964,7 @@ def loadAgents(isRed, factory, textgraphics, cmdLineArgs):
     args.update(cmdLineArgs)  # Add command line args with priority
 
     print "Loading Team:", factory
-    print "Arguments:", args
+    # print "Arguments:", args
 
     # if textgraphics and factoryClassName.startswith('Keyboard'):
     #   raise Exception('Using the keyboard requires graphics (no text display, quiet or training games)')
