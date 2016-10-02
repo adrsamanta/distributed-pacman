@@ -1,3 +1,5 @@
+import random
+
 from AgentExternals import *
 from captureAgents import CaptureAgent
 from game_code.capture import SIGHT_RANGE
@@ -306,13 +308,17 @@ class BaseAgent(object, CaptureAgent):
             if gameState.getAgentState(i).isPacman:
                 objectives.append(gameState.getAgentPosition(i))
 
-        minDist = self.getMazeDistance(neighbors[0], objectives[0])
-        bestNeighbor = neighbors[0]
-        # find the neighbor that is closest to an objective
-        for obj in objectives:
-            for neighbor in neighbors:
-                if self.getMazeDistance(obj, neighbor) < minDist:
-                    bestNeighbor = neighbor
+        if not objectives:
+            # nowhere to go lol
+            bestNeighbor = random.choice(neighbors)
+        else:
+            minDist = self.getMazeDistance(neighbors[0], objectives[0])
+            bestNeighbor = neighbors[0]
+            # find the neighbor that is closest to an objective
+            for obj in objectives:
+                for neighbor in neighbors:
+                    if self.getMazeDistance(obj, neighbor) < minDist:
+                        bestNeighbor = neighbor
         defProb = .8
         otherProbs = (1 - defProb) / (len(neighbors) - 1)
         # set the probability we move to a neighbor that is not bestNeighbor to the correct value
