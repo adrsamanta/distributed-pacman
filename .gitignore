@@ -54,5 +54,4 @@ Temporary Items
 logs/
 score
 tmp/
-game_code/__init__.py
 *.pyc
