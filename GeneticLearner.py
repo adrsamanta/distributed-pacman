@@ -177,7 +177,7 @@ toolbox.register("select", tools.selBest)
 
 
 def fake_eval(indiv):
-    return 10 * random.random(), 10, 10
+    return -10 * random.random(), 10, 10
 
 
 if debug:
@@ -223,7 +223,7 @@ if __name__ == '__main__':
         keepers = tools.selBest(pop, keep_len)
         # copy the breeders
         # breeders=toolbox.map(toolbox.clone, toolbox.select(pop, breeder_len)) (not needed b/c of varAnd)
-
+        z = toolbox.select(pop, breeder_len)
         offspring = algorithms.varAnd(toolbox.select(pop, breeder_len), toolbox, CXPB, MUTPB)
 
         doEval(offspring)
@@ -247,3 +247,5 @@ if __name__ == '__main__':
         print k, v
 
     print "DONE"
+
+    # TODO: !!!!!!!! make sure numEaten is working properly
