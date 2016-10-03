@@ -206,7 +206,7 @@ def doEval(individuals):
 
 if __name__ == '__main__':
     pool = multiprocessing.Pool()
-    toolbox.register("map", pool.map)
+    # toolbox.register("map", pool.map)
     print "beginning initial evaluation"
     # do initial evaluation:
     doEval(pop)
