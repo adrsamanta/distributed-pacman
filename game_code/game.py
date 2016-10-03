@@ -25,6 +25,7 @@ import time, os
 import traceback
 import sys
 
+
 #######################
 # Parts worth reading #
 #######################
@@ -543,6 +544,7 @@ class Game:
     def _agentCrash( self, agentIndex, quiet=False):
         "Helper method for handling agent crashes"
         if not quiet: traceback.print_exc()
+        print >> sys.stderr, traceback.format_exc()
         self.gameOver = True
         self.agentCrashed = True
         self.rules.agentCrash(self, agentIndex)

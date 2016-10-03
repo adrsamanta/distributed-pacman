@@ -6,7 +6,7 @@ import random
 import LearnBase
 import multiprocessing
 import copy
-
+import sys
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -85,7 +85,7 @@ toolbox.register("attr_neg_float", random.uniform, -1, 0)
 toolbox.register("init_wv", tools.initRepeat, list,
                  toolbox.attr_float, n=NUM_FEAT)
 
-print "registered stuff"
+
 
 def create_seeded_ind(ind_init):
     ind = tools.initRepeat(list, toolbox.attr_pos_float, NUM_FEAT)
@@ -126,7 +126,6 @@ def initPopulation(pcls, team, n_seed, n_rand):
     return pcls(pop + rand_pop)
 
 
-raw_input("prompt 0")
 
 # pops for score team
 toolbox.register("seeded_pop", initPopulation, list, toolbox.create_score_team, N_SEEDED, N_RAND)
@@ -186,7 +185,6 @@ if debug:
 else:
     toolbox.register("evaluate", evaluate)
 
-print "registered evaluate"
 
 stats = tools.Statistics(key=lambda ind: ind.fitness.values)
 stats.register("avg", numpy.mean, axis=0)
@@ -198,7 +196,6 @@ logbook = tools.Logbook()
 
 pop = toolbox.seeded_pop()
 
-print "created pop"
 
 def doEval(individuals):
     invalid_ind = [ind for ind in individuals if not ind.fitness.valid]
@@ -208,10 +205,12 @@ def doEval(individuals):
 
 
 if __name__ == '__main__':
+
+    # efn = timestamp+"_error.txt"
+    # sys.stderr = open(efn, "w")
     pool = multiprocessing.Pool()
-    # toolbox.register("map", pool.map)
+    toolbox.register("map", pool.map)
     print "beginning initial evaluation"
-    raw_input("PROMPT1!")
     # do initial evaluation:
     doEval(pop)
 
