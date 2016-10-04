@@ -9,6 +9,14 @@ import copy
 import sys
 import argparse
 
+stime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
+olog = open(stime + "_log.txt", buffering=0)
+
+
+def log(msg):
+    print msg
+    olog.write(msg + "\n")
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-ngen", type=int, default=100)
@@ -135,6 +143,7 @@ toolbox.register("pop", initPopulation, list, toolbox.create_score_team, 0, POP)
 def evaluate(indiv):
     # if my team is red, will ALWAYS be indeces 0, 2. Also: weightvecs are assigned to agents in order
     # so offensive agent is at index 0
+    ltime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
     red_team = ["-r", "GeneticAgent"]
     blue_team = ["-b", "baselineTeam"]  # will play against baseline for now, can change later
 
@@ -142,8 +151,9 @@ def evaluate(indiv):
 
     game_opts = ["-Q", "-c", "-l", "tinyCapture", "-n",
                  "3"]  # no graphics, because no one there to watch! also catch exceptions
+    log("starting games at " + ltime)
     score_food_list = capture.main_run(red_team + blue_team + red_opts + game_opts)
-
+    log("ending games started at " + ltime)
     # find the average values of these over all games
     score = sum(s[0] for s in score_food_list) / len(score_food_list)  # avg score over all games
     off_food = sum(s[1][0] for s in score_food_list) / len(score_food_list)
@@ -210,14 +220,14 @@ if __name__ == '__main__':
     # sys.stderr = open(efn, "w")
     pool = multiprocessing.Pool()
     toolbox.register("map", pool.map)
-    print "beginning initial evaluation"
+    log("beginning initial evaluation")
     # do initial evaluation:
     doEval(pop)
 
     logbook.record(gen=-1, **stats.compile(pop))
-    print "starting iteration"
+    log("starting iteration")
     for g in range(NGEN):
-        print "\n\nstarting generation ", g, "\n\n"
+        log("\n\nstarting generation ", g, "\n\n")
         breeder_len = int(.9 * len(pop))
         keep_len = len(pop) - breeder_len
         keepers = tools.selBest(pop, keep_len)
@@ -230,6 +240,8 @@ if __name__ == '__main__':
 
         pop = keepers + offspring
         logbook.record(gen=g, **stats.compile(pop))
+
+    log("cleanup")
     print "logbook length ", len(logbook)
     timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
     log_file_name = timestamp + "_log.txt"
