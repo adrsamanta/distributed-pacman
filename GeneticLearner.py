@@ -226,7 +226,7 @@ if __name__ == '__main__':
     logbook.record(gen=-1, **stats.compile(pop))
     log("starting iteration")
     for g in range(NGEN):
-        log("\n\nstarting generation ", g, "\n\n")
+        log("\n\nstarting generation " + str(g) + "\n\n")
         breeder_len = int(.9 * len(pop))
         keep_len = len(pop) - breeder_len
         keepers = tools.selBest(pop, keep_len)
