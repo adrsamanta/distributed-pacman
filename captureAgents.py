@@ -45,7 +45,8 @@ class RandomAgent( Agent ):
   def getAction( self, state ):
     return random.choice( state.getLegalActions( self.index ) )
 
-class CaptureAgent(Agent):
+
+class CaptureAgent(object, Agent):
   """
   A base class for capture agents.  The convenience methods herein handle
   some of the complications of a two-team game.

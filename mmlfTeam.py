@@ -9,21 +9,25 @@ from LearnBase import LearnerBase
 from game_code import capture
 from game_code.game import Directions
 
-mmlf_path = "C:\Users\alan.Blackbird\Desktop\Documents\CS 6366\distributed-pacman\mmlf"
+mmlf_path = "C:\\Users\\alan.Blackbird\\Desktop\\Documents\\CS 6366\\distributed-pacman\\mmlf"
 
 
-def createTeam(firstIndex, secondIndex, isRed, first="MMLF_Agent", second='MMLF_Agent'):
+def createTeam(firstIndex, secondIndex, isRed, first="MMLFAgent", second='MMLFAgent'):
+    a1 = MMLFAgent(firstIndex)
+    a2 = MMLFAgent(secondIndex)
     return [eval(first)(firstIndex), eval(second)(secondIndex)]
 
 
-class MMLF_Agent(LearnerBase):
+class MMLFAgent(LearnerBase):
     def registerInitialState(self, gameState):
         LearnerBase.registerInitialState(self, gameState)
         self.mmlfSetup()
 
     def mmlfSetup(self):
         bud = mmlfs.BaseUserDirectory(mmlf_path)
-        self.agent = dta(config=dta.DEFAULT_CONFIG_DICT, baseUserDir=bud)
+        config = {}
+        config["configDict"] = dta.DEFAULT_CONFIG_DICT
+        self.agent = dta(config=config, baseUserDir=bud)
         self.actionSpace = ActionSpace()
         self.actionSpace.addDiscreteDimension("move", [Directions.EAST, Directions.NORTH,
                                                        Directions.SOUTH, Directions.WEST,
@@ -31,8 +35,8 @@ class MMLF_Agent(LearnerBase):
         stateSpace = StateSpace()
         for dim in self.Features._fields:
             stateSpace.addContinuousDimension(dim, [(-2, 2)])
-        self.agent.setActionSpace(self.actionSpace)
         self.agent.setStateSpace(stateSpace)
+        self.agent.setActionSpace(self.actionSpace)
 
     def chooseAction(self, gameState):
         LearnerBase.chooseAction(self, gameState)
