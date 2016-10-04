@@ -1020,7 +1020,9 @@ def runGames(layouts, agents, display, length, numGames, record, numTraining, re
             gameDisplay = display
             rules.quiet = False
         g = rules.newGame(layout, agents, gameDisplay, length, muteAgents, catchExceptions)
+        print "starting game"
         g.run()
+        print "game done"
         if not beQuiet: games.append(g)
 
         g.record = None
