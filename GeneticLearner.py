@@ -10,8 +10,7 @@ import sys
 import argparse
 
 stime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
-olog = open(stime + "_log.txt", buffering=0)
-
+olog = open(stime + "_log.txt", "w", buffering=0)
 
 def log(msg):
     print msg
