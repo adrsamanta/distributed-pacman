@@ -9,7 +9,7 @@ class TeamData:
     def __init__(self, gameState, team, opps, agent):
         self.team=team
         self.mAgent=agent
-        self.offensive = True
+        self.offensive = False
         self.mDistribs=[None]*gameState.getNumAgents()
         #opps=self.team[0].getOpponents(gameState)
         for i in range(gameState.getNumAgents()):
