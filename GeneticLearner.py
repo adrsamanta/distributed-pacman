@@ -8,9 +8,10 @@ import multiprocessing
 import copy
 import sys
 import argparse
+import os
 
 stime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
-olog = open(stime + "_log.txt", "w", buffering=0)
+olog = open("logs/outlogs/" + stime + "_outlog.txt", "w", buffering=0)
 
 def log(msg):
     print msg
@@ -150,9 +151,9 @@ def evaluate(indiv):
 
     game_opts = ["-Q", "-c", "-l", "tinyCapture", "-n",
                  "3"]  # no graphics, because no one there to watch! also catch exceptions
-    log("starting games at " + ltime)
+    log("starting games at " + ltime + " on " + str(os.getpid()))
     score_food_list = capture.main_run(red_team + blue_team + red_opts + game_opts)
-    log("ending games started at " + ltime)
+    log("ending games started at " + ltime + " on " + str(os.getpid()))
     # find the average values of these over all games
     score = sum(s[0] for s in score_food_list) / len(score_food_list)  # avg score over all games
     off_food = sum(s[1][0] for s in score_food_list) / len(score_food_list)
@@ -242,9 +243,10 @@ if __name__ == '__main__':
 
     log("cleanup")
     print "logbook length ", len(logbook)
+    prefix = "logs/pop_logbook/"
     timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
-    log_file_name = timestamp + "_log.txt"
-    pop_file_name = timestamp + "_pop.txt"
+    log_file_name = prefix + timestamp + "_log.txt"
+    pop_file_name = prefix + timestamp + "_pop.txt"
     import pickle
 
     with open(log_file_name, "w") as log_file:

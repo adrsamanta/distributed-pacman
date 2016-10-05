@@ -31,7 +31,7 @@ class GeneticAgent(LearnerBase):
         timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
         logger = logging.getLogger("base")
         logger.setLevel(logging.INFO)
-        logger.addHandler(logging.FileHandler("logs/all_" + timestamp + ".txt"))
+        logger.addHandler(logging.FileHandler("logs/agent_logs/all_" + timestamp + ".txt"))
         self.logger = logger
 
     def chooseAction(self, gameState):
