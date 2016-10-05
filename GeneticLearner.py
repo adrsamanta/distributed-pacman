@@ -217,8 +217,8 @@ if __name__ == '__main__':
 
     # efn = timestamp+"_error.txt"
     # sys.stderr = open(efn, "w")
-    # pool = multiprocessing.Pool()
-    # toolbox.register("map", pool.map)
+    pool = multiprocessing.Pool()
+    toolbox.register("map", pool.map)
     log("beginning initial evaluation")
     # do initial evaluation:
     doEval(pop)
