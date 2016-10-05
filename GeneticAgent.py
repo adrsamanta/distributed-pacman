@@ -8,11 +8,6 @@ from datetime import datetime
 
 import re
 
-timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
-logger = logging.getLogger("base")
-logger.setLevel(logging.DEBUG)
-logger.addHandler(logging.FileHandler("logs/all_" + timestamp + ".txt"))
-
 
 def createTeam(firstIndex, secondIndex, isRed, weightvec1, weightvec2=None,
                first='GeneticAgent', second='GeneticAgent'):
@@ -35,7 +30,7 @@ class GeneticAgent(LearnerBase):
         self.weights = weights
         timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
         logger = logging.getLogger("base")
-        logger.setLevel(logging.DEBUG)
+        logger.setLevel(logging.INFO)
         logger.addHandler(logging.FileHandler("logs/all_" + timestamp + ".txt"))
         self.logger = logger
 
