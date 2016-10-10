@@ -513,7 +513,7 @@ class AgentRules:
 
                 agentState.numReturned += agentState.numCarrying
                 agentState.numCarrying = 0
-
+                agentState.numEaten = agentState.numReturned
                 redCount = 0
                 blueCount = 0
                 for index in range(state.getNumAgents()):
@@ -548,7 +548,6 @@ class AgentRules:
                 agents = [state.data.agentStates[agentIndex] for agentIndex in teamIndicesFunc()]
                 for agent in agents:
                     if agent.getPosition() == position:
-                        agent.numEaten += 1
                         agent.numCarrying += 1
                         break  # the above should only be true for one agent...
 
