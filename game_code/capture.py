@@ -67,7 +67,7 @@ KILL_POINTS = 0
 SONAR_NOISE_RANGE = 13  # Must be odd
 SONAR_NOISE_VALUES = [i - (SONAR_NOISE_RANGE - 1) / 2 for i in range(SONAR_NOISE_RANGE)]
 SIGHT_RANGE = 5  # Manhattan distance
-MIN_FOOD = 2
+MIN_FOOD = 0
 TOTAL_FOOD = 60
 
 DUMP_FOOD_ON_DEATH = True  # if we have the gameplay element that dumps dots on death
@@ -564,8 +564,9 @@ class AgentRules:
             state.data.food = state.data.food.copy()
             state.data.food[x][y] = False
             state.data._foodEaten = position
-            # if (isRed and state.getBlueFood().count() == MIN_FOOD) or (not isRed and state.getRedFood().count() == MIN_FOOD):
-            #  state.data._win = True
+            if (isRed and state.getBlueFood().count() == MIN_FOOD) or (
+                not isRed and state.getRedFood().count() == MIN_FOOD):
+                state.data._win = True
 
         # Eat capsule
         if isRed:
