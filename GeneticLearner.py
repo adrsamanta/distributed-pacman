@@ -9,7 +9,6 @@ import copy
 import sys
 import argparse
 import os
-from scoop import futures
 
 if __name__ == '__main__':
     stime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
@@ -222,7 +221,6 @@ if __name__ == '__main__':
 
     # pool = multiprocessing.Pool()
     # toolbox.register("map", pool.map)
-    toolbox.register("map", futures.map)
 
     log("beginning initial evaluation")
     # do initial evaluation:
