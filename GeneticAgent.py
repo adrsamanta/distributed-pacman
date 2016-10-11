@@ -29,9 +29,10 @@ class GeneticAgent(LearnerBase):
         self.initSetup(index)
         self.weights = weights
         timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
+        # self.count = 0
         logger = logging.getLogger("base")
         logger.setLevel(logging.INFO)
-        logger.addHandler(logging.FileHandler("logs/agent_logs/all_" + timestamp + ".txt"))
+        # logger.addHandler(logging.FileHandler("logs/agent_logs/all_" + timestamp + ".txt"))
         self.logger = logger
 
     def chooseAction(self, gameState):
@@ -40,6 +41,9 @@ class GeneticAgent(LearnerBase):
         LearnerBase.chooseAction(self, gameState)
         action = self.action_search(gameState)
         self.logger.debug("chose action")
+        # self.count+=1
+        # if self.count >=5:
+        #     raise Exception("BLAH BLAH BLAH")
         return action
 
     def getUtility(self, gamestate, beliefs):
