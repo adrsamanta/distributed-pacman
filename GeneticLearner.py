@@ -153,7 +153,7 @@ def evaluate(indiv):
 
     red_opts = ["--redOpts", "weightvec1=" + str(indiv.offense) + ";weightvec2=" + str(indiv.defense)]
 
-    game_opts = ["-Q", "-c", "-l", "tinyCapture", "-n",
+    game_opts = ["-q", "-c", "-l", "tinyCapture", "-n",
                  "3"]  # no graphics, because no one there to watch! also catch exceptions
     log("starting games at " + ltime + " on " + str(os.getpid()))
     score_food_list = capture.main_run(red_team + blue_team + red_opts + game_opts)
