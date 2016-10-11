@@ -155,7 +155,7 @@ def evaluate(indiv):
     game_opts = ["-q", "-c", "-l", "tinyCapture", "-n",
                  "3"]  # no graphics, because no one there to watch! also catch exceptions
     log("starting games at " + ltime + " on " + str(os.getpid()))
-    score_food_list = capture.main_run(red_team + blue_team + red_opts + game_opts, z)
+    score_food_list = capture.main_run(red_team + blue_team + red_opts + game_opts)
     log("ending games started at " + ltime + " on " + str(os.getpid()))
     # find the average values of these over all games
     score = sum(s[0] for s in score_food_list) / len(score_food_list)  # avg score over all games
