@@ -8,7 +8,6 @@ from datetime import datetime
 
 import re
 
-
 def createTeam(firstIndex, secondIndex, isRed, weightvec1, weightvec2=None,
                first='GeneticAgent', second='GeneticAgent'):
     def createWeights(vec):
