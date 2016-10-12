@@ -11,13 +11,14 @@ import argparse
 import os
 from scoop import futures
 
-stime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
-olog = open("logs/outlogs/" + stime + "_outlog.txt", "w", buffering=0)
+
+# stime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
+# olog = open("logs/outlogs/" + stime + "_outlog.txt", "w", buffering=0)
 
 
 def log(msg):
     print msg
-    olog.write(msg + "\n")
+    # olog.write(msg + "\n")
 
 
 parser = argparse.ArgumentParser()
@@ -199,13 +200,6 @@ if debug:
 else:
     toolbox.register("evaluate", evaluate)
 
-stats = tools.Statistics(key=lambda ind: ind.fitness.values)
-stats.register("avg", numpy.mean, axis=0)
-stats.register("std", numpy.std, axis=0)
-stats.register("min", numpy.min, axis=0)
-stats.register("max", numpy.max, axis=0)
-
-logbook = tools.Logbook()
 
 pop = toolbox.seeded_pop()
 
@@ -221,6 +215,14 @@ def doEval(individuals):
 
 
 if __name__ == '__main__':
+    stats = tools.Statistics(key=lambda ind: ind.fitness.values)
+    stats.register("avg", numpy.mean, axis=0)
+    stats.register("std", numpy.std, axis=0)
+    stats.register("min", numpy.min, axis=0)
+    stats.register("max", numpy.max, axis=0)
+
+    logbook = tools.Logbook()
+
     # pool = multiprocessing.Pool()
     # toolbox.register("map", pool.map)
     toolbox.register("map", futures.map)
