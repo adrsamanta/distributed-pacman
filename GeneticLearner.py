@@ -220,6 +220,7 @@ def doEval(individuals):
 
 
 if __name__ == '__main__':
+    memtrack = False
     stats = tools.Statistics(key=lambda ind: ind.fitness.values)
     stats.register("avg", numpy.mean, axis=0)
     stats.register("std", numpy.std, axis=0)
@@ -227,12 +228,13 @@ if __name__ == '__main__':
     stats.register("max", numpy.max, axis=0)
 
     logbook = tools.Logbook()
-    all_obj = muppy.get_objects()
-    sumStart = summary.summarize(all_obj)
-    summary.print_(sumStart)
-    all_obj = None
-    sumStart = None
-    tr = tracker.SummaryTracker()
+    if memtrack:
+        all_obj = muppy.get_objects()
+        sumStart = summary.summarize(all_obj)
+        summary.print_(sumStart)
+        all_obj = None
+        sumStart = None
+        tr = tracker.SummaryTracker()
 
     # pool = multiprocessing.Pool()
     # toolbox.register("map", pool.map)
@@ -258,7 +260,8 @@ if __name__ == '__main__':
 
         pop = keepers + offspring
         logbook.record(gen=g, **stats.compile(pop))
-        tr.print_diff()
+        if memtrack:
+            tr.print_diff()
     log("cleanup")
     print "logbook length ", len(logbook)
     prefix = "logs/pop_logbook/"
