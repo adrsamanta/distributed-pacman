@@ -10,7 +10,7 @@ import sys
 import argparse
 import os
 from scoop import futures
-
+from pympler import tracker, summary, muppy
 
 # stime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
 # olog = open("logs/outlogs/" + stime + "_outlog.txt", "w", buffering=0)
@@ -30,6 +30,8 @@ parser.add_argument("-cxpb", type=float, default=.5)
 parser.add_argument("-mutpb", type=float, default=.5)
 parser.add_argument("-indpb", type=float, default=.4)
 parser.add_argument("-d", action="store_true")
+parser.add_argument("--popfile", "-pf", type=file)
+
 
 args = parser.parse_args()
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
@@ -45,6 +47,9 @@ INDPB = args.indpb  # probability of mutating a given feature
 
 debug = args.d
 
+if args.popfile:
+    pass
+    # TODO: define this
 
 class Team(object):
     def __init__(self, off, defe):
@@ -222,6 +227,12 @@ if __name__ == '__main__':
     stats.register("max", numpy.max, axis=0)
 
     logbook = tools.Logbook()
+    all_obj = muppy.get_objects()
+    sumStart = summary.summarize(all_obj)
+    summary.print_(sumStart)
+    all_obj = None
+    sumStart = None
+    tr = tracker.SummaryTracker()
 
     # pool = multiprocessing.Pool()
     # toolbox.register("map", pool.map)
@@ -247,7 +258,7 @@ if __name__ == '__main__':
 
         pop = keepers + offspring
         logbook.record(gen=g, **stats.compile(pop))
-
+        tr.print_diff()
     log("cleanup")
     print "logbook length ", len(logbook)
     prefix = "logs/pop_logbook/"
