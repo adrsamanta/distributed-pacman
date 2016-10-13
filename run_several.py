@@ -6,8 +6,8 @@ import argparse
 today_folder = '{:%m.%d}'.format(datetime.now())
 
 program = "python -m scoop GeneticLearner.py -ngen 16 -s 10 -r 5"
-prefix = "OEL/" + today_folder + "/"
-
+# prefix = "OEL/" + today_folder + "/"
+prefix = ""
 parser = argparse.ArgumentParser()
 
 parser.add_argument("num_rounds", type=int)
@@ -35,6 +35,6 @@ for i in range(start, start + rounds):
     print "finished call", i
     if i == 0:
         # only after first call, start piping the pop
-        program += "-pf " + tmp_pop_file
+        program += " -pf " + tmp_pop_file
 
 print "done"
