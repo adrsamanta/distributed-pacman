@@ -46,6 +46,8 @@ INDPB = args.indpb  # probability of mutating a given feature
 
 debug = args.d
 
+toolbox = base.Toolbox()
+
 
 
 
@@ -61,14 +63,16 @@ creator.create("ScoreTeam", Team, fitness=creator.ScoreMax)
 creator.create("OffenseTeam", Team, fitness=creator.AteFoodMax)
 creator.create("DefenseTeam", Team, fitness=creator.EFoodMin)
 
-toolbox = base.Toolbox()
+if __name__ == '__main__':
+    toolbox.register("attr_float", random.uniform, -1, 1)
+    toolbox.register("attr_pos_float", random.random)
+    toolbox.register("attr_neg_float", random.uniform, -1, 0)
 
-toolbox.register("attr_float", random.uniform, -1, 1)
-toolbox.register("attr_pos_float", random.random)
-toolbox.register("attr_neg_float", random.uniform, -1, 0)
+    toolbox.register("init_wv", tools.initRepeat, list,
+                     toolbox.attr_float, n=NUM_FEAT)
 
-toolbox.register("init_wv", tools.initRepeat, list,
-                 toolbox.attr_float, n=NUM_FEAT)
+
+
 
 
 def create_seeded_ind(ind_init):
@@ -99,9 +103,10 @@ def create_team(seeded1, seeded2, team):
     return team(off, defe)
 
 
-toolbox.register("create_score_team", create_same_team, team=creator.ScoreTeam)
-toolbox.register("create_offense_team", create_same_team, team=creator.OffenseTeam)
-toolbox.register("create_defense_team", create_same_team, team=creator.DefenseTeam)
+if __name__ == '__main__':
+    toolbox.register("create_score_team", create_same_team, team=creator.ScoreTeam)
+    toolbox.register("create_offense_team", create_same_team, team=creator.OffenseTeam)
+    toolbox.register("create_defense_team", create_same_team, team=creator.DefenseTeam)
 
 
 # create a population with some "seeded" individuals (pre-determined signs)
@@ -111,9 +116,10 @@ def initPopulation(pcls, team, n_seed, n_rand):
     return pcls(pop + rand_pop)
 
 
-# pops for score team
-toolbox.register("seeded_pop", initPopulation, list, toolbox.create_score_team, N_SEEDED, N_RAND)
-toolbox.register("pop", initPopulation, list, toolbox.create_score_team, 0, POP)
+if __name__ == '__main__':
+    # pops for score team
+    toolbox.register("seeded_pop", initPopulation, list, toolbox.create_score_team, N_SEEDED, N_RAND)
+    toolbox.register("pop", initPopulation, list, toolbox.create_score_team, 0, POP)
 
 
 def evaluate(indiv):
@@ -154,28 +160,31 @@ def apply_mut(ind1, mut):
     return (ind1,)
 
 
-toolbox.register("cxblend", tools.cxBlend, alpha=.5)
-toolbox.register("mutgauss", tools.mutGaussian, mu=0, sigma=.5, indpb=INDPB)
+if __name__ == '__main__':
+    toolbox.register("cxblend", tools.cxBlend, alpha=.5)
+    toolbox.register("mutgauss", tools.mutGaussian, mu=0, sigma=.5, indpb=INDPB)
 
-toolbox.register("mate", apply_cx, cx=toolbox.cxblend)
-toolbox.register("mutate", apply_mut, mut=toolbox.mutgauss)
-toolbox.register("select", tools.selBest)
+    toolbox.register("mate", apply_cx, cx=toolbox.cxblend)
+    toolbox.register("mutate", apply_mut, mut=toolbox.mutgauss)
+    toolbox.register("select", tools.selBest)
 
 
 def fake_eval(indiv):
     return -10 * random.random(), 10, 10
 
 
-if debug:
-    toolbox.register("evaluate", fake_eval)
-else:
-    toolbox.register("evaluate", evaluate)
+if __name__ == '__main__':
 
-pop_file = args.pop_file
-if pop_file:
-    pop = pickle.load(pop_file)
-else:
-    pop = toolbox.seeded_pop()
+    if debug:
+        toolbox.register("evaluate", fake_eval)
+    else:
+        toolbox.register("evaluate", evaluate)
+
+    pop_file = args.pop_file
+    if pop_file:
+        pop = pickle.load(pop_file)
+    else:
+        pop = toolbox.seeded_pop()
 
 
 def doEval(individuals):
@@ -217,7 +226,7 @@ if __name__ == '__main__':
     log("starting iteration")
     for g in range(NGEN):
         log("\n\nstarting generation " + str(g) + "\n\n")
-        breeder_len = int(.9 * len(pop))
+        breeder_len = int(.8 * len(pop))
         keep_len = len(pop) - breeder_len
         keepers = tools.selBest(pop, keep_len)
         # copy the breeders
