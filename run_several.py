@@ -11,10 +11,14 @@ prefix = "OEL/" + today_folder + "/"
 parser = argparse.ArgumentParser()
 
 parser.add_argument("num_rounds", type=int)
+parser.add_argument("--start_val", "-sv", type=int, default=0)
+
 
 args = parser.parse_args()
 rounds = args.num_rounds
-for i in range(rounds):
+start = args.sv
+
+for i in range(start, start + rounds):
     outfile = open(prefix + str(i) + "out.log", "w")
     errfile = open(prefix + str(i) + "err.log", "w")
     subprocess.call(program, stdout=outfile, stderr=errfile, shell=True)

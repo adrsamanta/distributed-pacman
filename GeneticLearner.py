@@ -4,13 +4,12 @@ from deap import tools, creator, base, algorithms
 from game_code import capture
 import random
 import LearnBase
-import multiprocessing
-import copy
-import sys
 import argparse
 import os
 from scoop import futures
 from pympler import tracker, summary, muppy
+from GeneticClasses import Team, Fitness0
+import pickle
 
 # stime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
 # olog = open("logs/outlogs/" + stime + "_outlog.txt", "w", buffering=0)
@@ -47,40 +46,7 @@ INDPB = args.indpb  # probability of mutating a given feature
 
 debug = args.d
 
-if args.popfile:
-    pass
-    # TODO: define this
 
-class Team(object):
-    def __init__(self, off, defe):
-        self.offense = off
-        self.defense = defe
-
-        # def __copy__(self):
-        #     return Team(self.offense, self.defense)
-        #
-        # def __deepcopy__(self, memodict={}):
-        #     return Team(copy.deepcopy(self.offense), copy.deepcopy(self.defense))
-        # defined for safety, to make sure copying will work properly
-
-
-# redefine the getter so that 0 weights are allowed
-class Fitness0(base.Fitness):
-    def getValues(self):
-        ###Need to make this not fuck up when a weight is 0
-        def div2(v1, v2):
-            if v1 == 0 or v2 == 0:
-                return 0
-            else:
-                return v1 / v2
-
-        return tuple(map(div2, self.wvalues, self.weights))
-
-    values = property(getValues, base.Fitness.setValues, base.Fitness.delValues,
-                      ("Fitness values. Use directly ``individual.fitness.values = values`` "
-                       "in order to set the fitness and ``del individual.fitness.values`` "
-                       "in order to clear (invalidate) the fitness. The (unweighted) fitness "
-                       "can be directly accessed via ``individual.fitness.values``."))
 
 
 # weight structure:
@@ -205,8 +171,11 @@ if debug:
 else:
     toolbox.register("evaluate", evaluate)
 
-
-pop = toolbox.seeded_pop()
+pop_file = args.pop_file
+if pop_file:
+    pop = pickle.load(pop_file)
+else:
+    pop = toolbox.seeded_pop()
 
 
 def doEval(individuals):
@@ -268,7 +237,6 @@ if __name__ == '__main__':
     timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
     log_file_name = prefix + timestamp + "_log.txt"
     pop_file_name = prefix + timestamp + "_pop.txt"
-    import pickle
 
     with open(log_file_name, "w") as log_file:
         pickle.dump(logbook, log_file)
