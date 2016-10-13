@@ -8,13 +8,18 @@ import multiprocessing
 import copy
 import sys
 import argparse
+import os
+from scoop import futures
+from pympler import tracker, summary, muppy
 
-stime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
-olog = open(stime + "_log.txt", "w", buffering=0)
+# stime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
+# olog = open("logs/outlogs/" + stime + "_outlog.txt", "w", buffering=0)
+
 
 def log(msg):
     print msg
-    olog.write(msg + "\n")
+    # olog.write(msg + "\n")
+
 
 parser = argparse.ArgumentParser()
 
@@ -25,6 +30,8 @@ parser.add_argument("-cxpb", type=float, default=.5)
 parser.add_argument("-mutpb", type=float, default=.5)
 parser.add_argument("-indpb", type=float, default=.4)
 parser.add_argument("-d", action="store_true")
+parser.add_argument("--popfile", "-pf", type=file)
+
 
 args = parser.parse_args()
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
@@ -40,6 +47,10 @@ INDPB = args.indpb  # probability of mutating a given feature
 
 debug = args.d
 
+if args.popfile:
+    pass
+    # TODO: define this
+
 class Team(object):
     def __init__(self, off, defe):
         self.offense = off
@@ -50,7 +61,7 @@ class Team(object):
         #
         # def __deepcopy__(self, memodict={}):
         #     return Team(copy.deepcopy(self.offense), copy.deepcopy(self.defense))
-        #defined for safety, to make sure copying will work properly
+        # defined for safety, to make sure copying will work properly
 
 
 # redefine the getter so that 0 weights are allowed
@@ -70,6 +81,7 @@ class Fitness0(base.Fitness):
                        "in order to set the fitness and ``del individual.fitness.values`` "
                        "in order to clear (invalidate) the fitness. The (unweighted) fitness "
                        "can be directly accessed via ``individual.fitness.values``."))
+
 
 # weight structure:
 # (score_weight, Amt of food eaten by offensive agent, amt of food eaten by enemy)
@@ -91,7 +103,6 @@ toolbox.register("attr_neg_float", random.uniform, -1, 0)
 
 toolbox.register("init_wv", tools.initRepeat, list,
                  toolbox.attr_float, n=NUM_FEAT)
-
 
 
 def create_seeded_ind(ind_init):
@@ -126,12 +137,12 @@ toolbox.register("create_score_team", create_same_team, team=creator.ScoreTeam)
 toolbox.register("create_offense_team", create_same_team, team=creator.OffenseTeam)
 toolbox.register("create_defense_team", create_same_team, team=creator.DefenseTeam)
 
+
 # create a population with some "seeded" individuals (pre-determined signs)
 def initPopulation(pcls, team, n_seed, n_rand):
     pop = [team(True) for i in range(n_seed)]
     rand_pop = [team(False) for i in range(n_rand)]
     return pcls(pop + rand_pop)
-
 
 
 # pops for score team
@@ -148,11 +159,11 @@ def evaluate(indiv):
 
     red_opts = ["--redOpts", "weightvec1=" + str(indiv.offense) + ";weightvec2=" + str(indiv.defense)]
 
-    game_opts = ["-Q", "-c", "-l", "tinyCapture", "-n",
+    game_opts = ["-q", "-c", "-l", "tinyCapture", "-n",
                  "3"]  # no graphics, because no one there to watch! also catch exceptions
-    log("starting games at " + ltime)
+    log("starting games at " + ltime + " on " + str(os.getpid()))
     score_food_list = capture.main_run(red_team + blue_team + red_opts + game_opts)
-    log("ending games started at " + ltime)
+    log("ending games started at " + ltime + " on " + str(os.getpid()))
     # find the average values of these over all games
     score = sum(s[0] for s in score_food_list) / len(score_food_list)  # avg score over all games
     off_food = sum(s[1][0] for s in score_food_list) / len(score_food_list)
@@ -195,14 +206,6 @@ else:
     toolbox.register("evaluate", evaluate)
 
 
-stats = tools.Statistics(key=lambda ind: ind.fitness.values)
-stats.register("avg", numpy.mean, axis=0)
-stats.register("std", numpy.std, axis=0)
-stats.register("min", numpy.min, axis=0)
-stats.register("max", numpy.max, axis=0)
-
-logbook = tools.Logbook()
-
 pop = toolbox.seeded_pop()
 
 
@@ -212,13 +215,31 @@ def doEval(individuals):
     for ind, fit in zip(invalid_ind, fitnesses):
         ind.fitness.values = fit
 
-
-if __name__ == '__main__':
-
     # efn = timestamp+"_error.txt"
     # sys.stderr = open(efn, "w")
-    pool = multiprocessing.Pool()
-    toolbox.register("map", pool.map)
+
+
+if __name__ == '__main__':
+    memtrack = False
+    stats = tools.Statistics(key=lambda ind: ind.fitness.values)
+    stats.register("avg", numpy.mean, axis=0)
+    stats.register("std", numpy.std, axis=0)
+    stats.register("min", numpy.min, axis=0)
+    stats.register("max", numpy.max, axis=0)
+
+    logbook = tools.Logbook()
+    if memtrack:
+        all_obj = muppy.get_objects()
+        sumStart = summary.summarize(all_obj)
+        summary.print_(sumStart)
+        all_obj = None
+        sumStart = None
+        tr = tracker.SummaryTracker()
+
+    # pool = multiprocessing.Pool()
+    # toolbox.register("map", pool.map)
+    toolbox.register("map", futures.map)
+
     log("beginning initial evaluation")
     # do initial evaluation:
     doEval(pop)
@@ -239,12 +260,14 @@ if __name__ == '__main__':
 
         pop = keepers + offspring
         logbook.record(gen=g, **stats.compile(pop))
-
+        if memtrack:
+            tr.print_diff()
     log("cleanup")
     print "logbook length ", len(logbook)
+    prefix = "logs/pop_logbook/"
     timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
-    log_file_name = timestamp + "_log.txt"
-    pop_file_name = timestamp + "_pop.txt"
+    log_file_name = prefix + timestamp + "_log.txt"
+    pop_file_name = prefix + timestamp + "_pop.txt"
     import pickle
 
     with open(log_file_name, "w") as log_file:

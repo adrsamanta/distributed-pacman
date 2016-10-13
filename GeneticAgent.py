@@ -3,8 +3,11 @@ from collections import namedtuple
 import util
 from captureAgents import CaptureAgent
 from game_code import game
+import logging
+from datetime import datetime
 
 import re
+
 
 def createTeam(firstIndex, secondIndex, isRed, weightvec1, weightvec2=None,
                first='GeneticAgent', second='GeneticAgent'):
@@ -25,11 +28,18 @@ class GeneticAgent(LearnerBase):
     def __init__(self, index, weights):
         self.initSetup(index)
         self.weights = weights
+        timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
+        logger = logging.getLogger("base")
+        logger.setLevel(logging.INFO)
+        logger.addHandler(logging.FileHandler("logs/agent_logs/all_" + timestamp + ".txt"))
+        self.logger = logger
 
     def chooseAction(self, gameState):
+        self.logger.debug("going to choose action")
         # super(LearnerBase, self).chooseAction(gameState)
         LearnerBase.chooseAction(self, gameState)
         action = self.action_search(gameState)
+        self.logger.debug("chose action")
         return action
 
     def getUtility(self, gamestate, beliefs):
@@ -74,7 +84,7 @@ class GeneticAgent(LearnerBase):
             newgs = gamestate.generateSuccessor(self.index, action)
             toVisit.push(State(action, newgs, self.data.mDistribs, 0, action))
             action_utils[action] = []  # initialize action_utils for this action
-
+        self.logger.debug("searching toVisit")
         while not toVisit.isEmpty():  # while toVisit still has stuff in it
             # new "State" tuple
             ns = toVisit.pop()
@@ -105,7 +115,7 @@ class GeneticAgent(LearnerBase):
                     newgs = ns.gamestate.generateSuccessor(self.index, action)
 
                     toVisit.push(State(ns.starting_action, newgs, nsb, ns.depth + 1, action))
-
+        self.logger.debug("done checking tovisit")
         # TODO: pick action based on highest average or highest sum?
         avg_action_util = [(u, sum(action_utils[u]) / len(action_utils[u])) for u in action_utils.keys()]
         # TODO: figure out what to do here
