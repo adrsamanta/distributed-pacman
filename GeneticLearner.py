@@ -30,7 +30,7 @@ parser.add_argument("-mutpb", type=float, default=.5)
 parser.add_argument("-indpb", type=float, default=.4)
 parser.add_argument("-d", action="store_true")
 parser.add_argument("--popfile", "-pf", type=file)
-
+parser.add_argument("--pop_out", "-po", type=file)
 
 args = parser.parse_args()
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
@@ -243,6 +243,9 @@ if __name__ == '__main__':
 
     with open(pop_file_name, "w") as pop_file:
         pickle.dump(pop, pop_file)
+
+    if args.pop_out:
+        pickle.dump(pop, args.pop_out)
 
     record = stats.compile(pop)
     for k, v in record.iteritems():
