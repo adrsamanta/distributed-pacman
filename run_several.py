@@ -14,11 +14,18 @@ parser.add_argument("num_rounds", type=int)
 parser.add_argument("--start_val", "-sv", type=int, default=0)
 parser.add_argument("--start_pop", "-sp", type=file)
 parser.add_argument("--pipe_pop", "-p", action="store_true")
-
+parser.add_argument("-d", action="store_true")
+parser.add_argument("-ho", action="store_true")
 
 args = parser.parse_args()
 rounds = args.num_rounds
 start = args.start_val
+
+if args.d:
+    program += " -d "
+
+if args.ho:
+    prefix = ""
 
 if args.start_pop:
     print "not implemented yet you fool"
