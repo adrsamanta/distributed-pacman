@@ -6,8 +6,8 @@ import argparse
 today_folder = '{:%m.%d}'.format(datetime.now())
 
 program = "python -m scoop GeneticLearner.py -ngen 16 -s 10 -r 5"
-# prefix = "OEL/" + today_folder + "/"
-prefix = "OEL/lr2/"
+prefix = "OEL/" + today_folder + "/offense_"
+# prefix = "OEL/lr2/"
 parser = argparse.ArgumentParser()
 
 parser.add_argument("num_rounds", type=int)
