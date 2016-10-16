@@ -118,8 +118,9 @@ def initPopulation(pcls, team, n_seed, n_rand):
 
 if __name__ == '__main__':
     # pops for score team
-    toolbox.register("seeded_pop", initPopulation, list, toolbox.create_score_team, N_SEEDED, N_RAND)
-    toolbox.register("pop", initPopulation, list, toolbox.create_score_team, 0, POP)
+    team = toolbox.create_offense_team
+    toolbox.register("seeded_pop", initPopulation, list, team, N_SEEDED, N_RAND)
+    toolbox.register("pop", initPopulation, list, team, 0, POP)
 
 
 def evaluate(indiv):
