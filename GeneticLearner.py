@@ -4,13 +4,12 @@ from deap import tools, creator, base, algorithms
 from game_code import capture
 import random
 import LearnBase
-import multiprocessing
-import copy
-import sys
 import argparse
 import os
 from scoop import futures
 from pympler import tracker, summary, muppy
+from GeneticClasses import Team, Fitness0
+import pickle
 
 # stime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
 # olog = open("logs/outlogs/" + stime + "_outlog.txt", "w", buffering=0)
@@ -30,8 +29,8 @@ parser.add_argument("-cxpb", type=float, default=.5)
 parser.add_argument("-mutpb", type=float, default=.5)
 parser.add_argument("-indpb", type=float, default=.4)
 parser.add_argument("-d", action="store_true")
-parser.add_argument("--popfile", "-pf", type=file)
-
+parser.add_argument("--pop_file", "-pf", type=file)
+parser.add_argument("--pop_out", "-po", type=str)
 
 args = parser.parse_args()
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
@@ -47,40 +46,9 @@ INDPB = args.indpb  # probability of mutating a given feature
 
 debug = args.d
 
-if args.popfile:
-    pass
-    # TODO: define this
-
-class Team(object):
-    def __init__(self, off, defe):
-        self.offense = off
-        self.defense = defe
-
-        # def __copy__(self):
-        #     return Team(self.offense, self.defense)
-        #
-        # def __deepcopy__(self, memodict={}):
-        #     return Team(copy.deepcopy(self.offense), copy.deepcopy(self.defense))
-        # defined for safety, to make sure copying will work properly
+toolbox = base.Toolbox()
 
 
-# redefine the getter so that 0 weights are allowed
-class Fitness0(base.Fitness):
-    def getValues(self):
-        ###Need to make this not fuck up when a weight is 0
-        def div2(v1, v2):
-            if v1 == 0 or v2 == 0:
-                return 0
-            else:
-                return v1 / v2
-
-        return tuple(map(div2, self.wvalues, self.weights))
-
-    values = property(getValues, base.Fitness.setValues, base.Fitness.delValues,
-                      ("Fitness values. Use directly ``individual.fitness.values = values`` "
-                       "in order to set the fitness and ``del individual.fitness.values`` "
-                       "in order to clear (invalidate) the fitness. The (unweighted) fitness "
-                       "can be directly accessed via ``individual.fitness.values``."))
 
 
 # weight structure:
@@ -95,14 +63,16 @@ creator.create("ScoreTeam", Team, fitness=creator.ScoreMax)
 creator.create("OffenseTeam", Team, fitness=creator.AteFoodMax)
 creator.create("DefenseTeam", Team, fitness=creator.EFoodMin)
 
-toolbox = base.Toolbox()
+if __name__ == '__main__':
+    toolbox.register("attr_float", random.uniform, -1, 1)
+    toolbox.register("attr_pos_float", random.random)
+    toolbox.register("attr_neg_float", random.uniform, -1, 0)
 
-toolbox.register("attr_float", random.uniform, -1, 1)
-toolbox.register("attr_pos_float", random.random)
-toolbox.register("attr_neg_float", random.uniform, -1, 0)
+    toolbox.register("init_wv", tools.initRepeat, list,
+                     toolbox.attr_float, n=NUM_FEAT)
 
-toolbox.register("init_wv", tools.initRepeat, list,
-                 toolbox.attr_float, n=NUM_FEAT)
+
+
 
 
 def create_seeded_ind(ind_init):
@@ -133,9 +103,10 @@ def create_team(seeded1, seeded2, team):
     return team(off, defe)
 
 
-toolbox.register("create_score_team", create_same_team, team=creator.ScoreTeam)
-toolbox.register("create_offense_team", create_same_team, team=creator.OffenseTeam)
-toolbox.register("create_defense_team", create_same_team, team=creator.DefenseTeam)
+if __name__ == '__main__':
+    toolbox.register("create_score_team", create_same_team, team=creator.ScoreTeam)
+    toolbox.register("create_offense_team", create_same_team, team=creator.OffenseTeam)
+    toolbox.register("create_defense_team", create_same_team, team=creator.DefenseTeam)
 
 
 # create a population with some "seeded" individuals (pre-determined signs)
@@ -145,9 +116,11 @@ def initPopulation(pcls, team, n_seed, n_rand):
     return pcls(pop + rand_pop)
 
 
-# pops for score team
-toolbox.register("seeded_pop", initPopulation, list, toolbox.create_score_team, N_SEEDED, N_RAND)
-toolbox.register("pop", initPopulation, list, toolbox.create_score_team, 0, POP)
+if __name__ == '__main__':
+    # pops for score team
+    team = toolbox.create_offense_team
+    toolbox.register("seeded_pop", initPopulation, list, team, N_SEEDED, N_RAND)
+    toolbox.register("pop", initPopulation, list, team, 0, POP)
 
 
 def evaluate(indiv):
@@ -188,25 +161,31 @@ def apply_mut(ind1, mut):
     return (ind1,)
 
 
-toolbox.register("cxblend", tools.cxBlend, alpha=.5)
-toolbox.register("mutgauss", tools.mutGaussian, mu=0, sigma=.5, indpb=INDPB)
+if __name__ == '__main__':
+    toolbox.register("cxblend", tools.cxBlend, alpha=.5)
+    toolbox.register("mutgauss", tools.mutGaussian, mu=0, sigma=.5, indpb=INDPB)
 
-toolbox.register("mate", apply_cx, cx=toolbox.cxblend)
-toolbox.register("mutate", apply_mut, mut=toolbox.mutgauss)
-toolbox.register("select", tools.selBest)
+    toolbox.register("mate", apply_cx, cx=toolbox.cxblend)
+    toolbox.register("mutate", apply_mut, mut=toolbox.mutgauss)
+    toolbox.register("select", tools.selBest)
 
 
 def fake_eval(indiv):
     return -10 * random.random(), 10, 10
 
 
-if debug:
-    toolbox.register("evaluate", fake_eval)
-else:
-    toolbox.register("evaluate", evaluate)
+if __name__ == '__main__':
 
+    if debug:
+        toolbox.register("evaluate", fake_eval)
+    else:
+        toolbox.register("evaluate", evaluate)
 
-pop = toolbox.seeded_pop()
+    pop_file = args.pop_file
+    if pop_file:
+        pop = pickle.load(pop_file)
+    else:
+        pop = toolbox.seeded_pop()
 
 
 def doEval(individuals):
@@ -248,7 +227,7 @@ if __name__ == '__main__':
     log("starting iteration")
     for g in range(NGEN):
         log("\n\nstarting generation " + str(g) + "\n\n")
-        breeder_len = int(.9 * len(pop))
+        breeder_len = int(.8 * len(pop))
         keep_len = len(pop) - breeder_len
         keepers = tools.selBest(pop, keep_len)
         # copy the breeders
@@ -268,13 +247,16 @@ if __name__ == '__main__':
     timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
     log_file_name = prefix + timestamp + "_log.txt"
     pop_file_name = prefix + timestamp + "_pop.txt"
-    import pickle
 
     with open(log_file_name, "w") as log_file:
         pickle.dump(logbook, log_file)
 
     with open(pop_file_name, "w") as pop_file:
         pickle.dump(pop, pop_file)
+
+    if args.pop_out:
+        with open(args.pop_out, "w") as pop_out:
+            pickle.dump(pop, pop_out)
 
     record = stats.compile(pop)
     for k, v in record.iteritems():
