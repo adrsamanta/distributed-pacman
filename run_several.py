@@ -5,7 +5,7 @@ import argparse
 
 today_folder = '{:%m.%d}'.format(datetime.now())
 
-program = "python -m scoop GeneticLearner.py -ngen 16 -s 10 -r 5"
+program = "python -m scoop GeneticLearner.py -ngen 18 -s 10 -r 5"
 prefix = "OEL/" + today_folder + "/offense_"
 # prefix = "OEL/lr2/"
 parser = argparse.ArgumentParser()
