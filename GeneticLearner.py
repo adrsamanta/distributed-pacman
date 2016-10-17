@@ -241,6 +241,9 @@ if __name__ == '__main__':
         logbook.record(gen=g, **stats.compile(pop))
         if memtrack:
             tr.print_diff()
+        record = stats.compile(pop)
+        for k, v in record.iteritems():
+            print k, v
     log("cleanup")
     print "logbook length ", len(logbook)
     prefix = "logs/pop_logbook/"
