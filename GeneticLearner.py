@@ -246,7 +246,7 @@ if __name__ == '__main__':
             print k, v
     log("cleanup")
     print "logbook length ", len(logbook)
-    prefix = "logs/pop_logbook/"
+    prefix = "logs/pop_logbook/offense"
     timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
     log_file_name = prefix + timestamp + "_log.txt"
     pop_file_name = prefix + timestamp + "_pop.txt"
