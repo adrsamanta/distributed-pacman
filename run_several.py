@@ -6,7 +6,7 @@ import argparse
 today_folder = '{:%m.%d}'.format(datetime.now())
 
 program = "python -m scoop GeneticLearner.py -ngen 18 -s 10 -r 5"
-prefix = "OEL/" + today_folder + "/offense_"
+prefix = "OEL/" + today_folder
 # prefix = "OEL/lr2/"
 parser = argparse.ArgumentParser()
 
@@ -16,16 +16,25 @@ parser.add_argument("--start_pop", "-sp", type=file)
 parser.add_argument("--pipe_pop", "-p", action="store_true")
 parser.add_argument("-d", action="store_true")
 parser.add_argument("-ho", action="store_true")
+parser.add_argument("--type", "-t", choices=["s", "o", 'd'], default="s", type=str)
+
+
 
 args = parser.parse_args()
 rounds = args.num_rounds
 start = args.start_val
+program += " -t " + args.type
 
 if args.d:
     program += " -d "
 
 if args.ho:
     prefix = ""
+
+if args.type == "o":
+    prefix += "/offense_"
+elif args.type == "d":
+    prefix += "/defense_"
 
 if args.start_pop:
     print "not implemented yet you fool"

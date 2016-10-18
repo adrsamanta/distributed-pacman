@@ -31,6 +31,8 @@ parser.add_argument("-indpb", type=float, default=.4)
 parser.add_argument("-d", action="store_true")
 parser.add_argument("--pop_file", "-pf", type=file)
 parser.add_argument("--pop_out", "-po", type=str)
+parser.add_argument("--type", "-t", choices=["s", "o", 'd'], default="s", type=str)
+
 
 args = parser.parse_args()
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
@@ -118,7 +120,12 @@ def initPopulation(pcls, team, n_seed, n_rand):
 
 if __name__ == '__main__':
     # pops for score team
-    team = toolbox.create_offense_team
+    if args.type == "s":
+        team = creator.create_score_team
+    elif args.type == "o":
+        team = creator.create_offense_team
+    elif args.type == "d":
+        team = creator.create_defense_team
     toolbox.register("seeded_pop", initPopulation, list, team, N_SEEDED, N_RAND)
     toolbox.register("pop", initPopulation, list, team, 0, POP)
 
@@ -246,7 +253,11 @@ if __name__ == '__main__':
             print k, v
     log("cleanup")
     print "logbook length ", len(logbook)
-    prefix = "logs/pop_logbook/offense"
+    prefix = "logs/pop_logbook/"
+    if args.type == "o":
+        prefix += "Offense/"
+    elif args.type == "d":
+        prefix += "Defense/"
     timestamp = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
     log_file_name = prefix + timestamp + "_log.txt"
     pop_file_name = prefix + timestamp + "_pop.txt"
