@@ -121,11 +121,11 @@ def initPopulation(pcls, team, n_seed, n_rand):
 if __name__ == '__main__':
     # pops for score team
     if args.type == "s":
-        team = creator.create_score_team
+        team = toolbox.create_score_team
     elif args.type == "o":
-        team = creator.create_offense_team
+        team = toolbox.create_offense_team
     elif args.type == "d":
-        team = creator.create_defense_team
+        team = toolbox.create_defense_team
     toolbox.register("seeded_pop", initPopulation, list, team, N_SEEDED, N_RAND)
     toolbox.register("pop", initPopulation, list, team, 0, POP)
 
