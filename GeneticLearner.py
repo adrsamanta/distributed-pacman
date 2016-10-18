@@ -122,10 +122,13 @@ if __name__ == '__main__':
     # pops for score team
     if args.type == "s":
         team = toolbox.create_score_team
+        print "score team"
     elif args.type == "o":
         team = toolbox.create_offense_team
+        print "offense team"
     elif args.type == "d":
         team = toolbox.create_defense_team
+        print "defense team"
     toolbox.register("seeded_pop", initPopulation, list, team, N_SEEDED, N_RAND)
     toolbox.register("pop", initPopulation, list, team, 0, POP)
 
