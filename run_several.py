@@ -40,7 +40,7 @@ for i in range(start, start + rounds):
     errfile = open(prefix + str(i) + "err.log", "w")
     subprocess.call(program, stdout=outfile, stderr=errfile, shell=True)
     print "finished call", i
-    if i == 0 and args.p:
+    if i == 0 and args.pipe_pop:
         # only after first call, start piping the pop
         program += " -pf " + tmp_pop_file
 
