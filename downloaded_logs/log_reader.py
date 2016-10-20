@@ -29,7 +29,9 @@ defenseAgents = []
 
 files = os.listdir(p)
 
-for file in files:
+
+def process_file(file):
+    global scoreAgents, offenseAgents, defenseAgents
     if file.endswith("pop.txt"):
         with open(file) as ifile:
             pop = pickle.load(ifile)
@@ -43,6 +45,21 @@ for file in files:
                 defenseAgents += best2
             else:
                 print "unknown type: ", type
+
+
+for file in files:
+    process_file(file)
+
+if "Offense" in files:
+    os.chdir(p + "\\Offense")
+    for file in os.listdir(os.getcwd()):
+        process_file(file)
+
+if "Defense" in files:
+    os.chdir(p + "\\Defense")
+    for file in os.listdir(os.getcwd()):
+        process_file(file)
+
 
 stats = tools.Statistics(key=lambda ind: ind.fitness.values)
 stats.register("avg", numpy.mean, axis=0)
