@@ -1,5 +1,7 @@
 import os
 import pickle
+
+import numpy
 from deap import tools, creator, base, algorithms
 from GeneticClasses import Team, Fitness0
 
@@ -41,3 +43,34 @@ for file in files:
                 defenseAgents += best2
             else:
                 print "unknown type: ", type
+
+stats = tools.Statistics(key=lambda ind: ind.fitness.values)
+stats.register("avg", numpy.mean, axis=0)
+stats.register("std", numpy.std, axis=0)
+stats.register("min", numpy.min, axis=0)
+stats.register("max", numpy.max, axis=0)
+
+
+def pickle_all(filebase):
+    os.chdir("C:\\Users\\alan.Blackbird\\Desktop\\Documents\\CS 6366\\distributed-pacman\\compiled_pops")
+    with open(filebase + "_score", "w") as out:
+        pickle.dump(scoreAgents, out)
+    with open(filebase + "_offense", "w") as out:
+        pickle.dump(offenseAgents, out)
+    with open(filebase + "_defense", "w") as out:
+        pickle.dump(defenseAgents, out)
+
+
+def getFitness(agent):
+    if agent.type == "Score":
+        return agent.fitness.getValues()[0]
+    if agent.type == "Offense":
+        return agent.fitness.getValues()[1]
+    if agent.type == "Defense":
+        return agent.fitness.getValues()[2]
+
+
+def pickle_set(filebase, subset):
+    os.chdir("C:\\Users\\alan.Blackbird\\Desktop\\Documents\\CS 6366\\distributed-pacman\\compiled_pops")
+    with open(filebase + "_" + subset[0].type.lower(), "w") as out:
+        pickle.dump(subset, out)
