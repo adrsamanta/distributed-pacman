@@ -74,6 +74,8 @@ DUMP_FOOD_ON_DEATH = True  # if we have the gameplay element that dumps dots on 
 
 MUST_RETURN_HOME = False  # if you have to return home for score to increase
 
+ENEMY_HIDDEN = True
+
 SCARED_TIME = 40
 
 
@@ -287,7 +289,7 @@ class GameState:
             team = self.redTeam
 
         for enemy in otherTeam:
-            seen = True # change this line to False to remove sight of enemy
+            seen = not ENEMY_HIDDEN  # change this line to False to remove sight of enemy
             enemyPos = state.getAgentPosition(enemy)
             for teammate in team:
                 if util.manhattanDistance(enemyPos, state.getAgentPosition(teammate)) <= SIGHT_RANGE:
