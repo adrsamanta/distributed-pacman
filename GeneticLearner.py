@@ -64,9 +64,11 @@ creator.create("ScoreMax", Fitness0, weights=(1.0, 0.0, 0.0))
 creator.create("AteFoodMax", Fitness0, weights=(0., 1., 0.))
 creator.create("EFoodMin", Fitness0, weights=(0., 0., -1.))
 
-creator.create("ScoreTeam", Team, fitness=creator.ScoreMax)
-creator.create("OffenseTeam", Team, fitness=creator.AteFoodMax)
-creator.create("DefenseTeam", Team, fitness=creator.EFoodMin)
+creator.create("ScoreTeam", Team, fitness=creator.ScoreMax, type="Score")
+creator.create("OffenseTeam", Team, fitness=creator.AteFoodMax, type="Offense")
+creator.create("DefenseTeam", Team, fitness=creator.EFoodMin, type="Defense")
+
+
 
 if __name__ == '__main__':
     toolbox.register("attr_float", random.uniform, -1, 1)
