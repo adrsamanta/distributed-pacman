@@ -32,6 +32,7 @@ parser.add_argument("-d", action="store_true")
 parser.add_argument("--pop_file", "-pf", type=file)
 parser.add_argument("--pop_out", "-po", type=str)
 parser.add_argument("--type", "-t", choices=["s", "o", 'd'], default="s", type=str)
+parser.add_argument("--enemy_hid", "-eh", type=bool, default=False)
 
 
 args = parser.parse_args()
@@ -45,6 +46,8 @@ NGEN = args.ngen  # number of generations
 CXPB = args.cxpb  # crossover probability
 MUTPB = args.mutpb  # mutation probability
 INDPB = args.indpb  # probability of mutating a given feature
+
+capture.ENEMY_HIDDEN = args.enemy_hid
 
 debug = args.d
 
