@@ -6,7 +6,7 @@ import argparse
 today_folder = '{:%m.%d}'.format(datetime.now())
 
 program = "python -m scoop GeneticLearner.py -ngen 18 -s 10 -r 5 -eh True"
-prefix = "OEL/" + today_folder
+prefix = "OEL/" + today_folder + "/"
 # prefix = "OEL/lr2/"
 parser = argparse.ArgumentParser()
 
@@ -32,9 +32,9 @@ if args.ho:
     prefix = ""
 
 if args.type == "o":
-    prefix += "/offense_"
+    prefix += "offense_"
 elif args.type == "d":
-    prefix += "/defense_"
+    prefix += "defense_"
 
 if args.start_pop:
     print "not implemented yet you fool"
