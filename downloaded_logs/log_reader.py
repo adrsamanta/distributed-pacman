@@ -5,7 +5,7 @@ import numpy
 from deap import tools, creator, base, algorithms
 from GeneticClasses import Team, Fitness0
 
-server = "server1"
+server = "server2"
 
 os.chdir(
     "C:\\Users\\alan.Blackbird\\Desktop\\Documents\\CS 6366\\distributed-pacman\\downloaded_logs\\" + server + "\\logs\\pop_logbook")
@@ -36,6 +36,7 @@ def process_file(file):
         with open(file) as ifile:
             pop = pickle.load(ifile)
             best2 = tools.selBest(pop, 2)
+            # best2 = pop
             type = best2[0].type
             if type == "Score":
                 scoreAgents += best2
