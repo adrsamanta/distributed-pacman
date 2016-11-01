@@ -5,7 +5,7 @@ import argparse
 
 today_folder = '{:%m.%d}'.format(datetime.now())
 
-program = "python -m scoop GeneticLearner.py -ngen 18 -s 10 -r 5 -eh True"
+program = "python -m scoop GeneticLearner.py -ngen 18 -s 10 -r 5 -eh False"
 prefix = "OEL/" + today_folder + "/"
 # prefix = "OEL/lr2/"
 parser = argparse.ArgumentParser()
@@ -17,7 +17,7 @@ parser.add_argument("--pipe_pop", "-p", action="store_true")
 parser.add_argument("-d", action="store_true", help="debug")
 parser.add_argument("-ho", action="store_true", help="home")
 parser.add_argument("--type", "-t", choices=["s", "o", 'd'], default="s", type=str)
-
+parser.add_argument("--layout", "-l", type=str, default="")
 
 
 args = parser.parse_args()
@@ -27,6 +27,8 @@ program += " -t " + args.type
 
 if args.d:
     program += " -d "
+if args.layout:
+    program += " -l " + args.layout
 
 if args.ho:
     prefix = ""

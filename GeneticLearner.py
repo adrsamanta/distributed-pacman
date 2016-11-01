@@ -33,7 +33,7 @@ parser.add_argument("--pop_file", "-pf", type=file)
 parser.add_argument("--pop_out", "-po", type=str)
 parser.add_argument("--type", "-t", choices=["s", "o", 'd'], default="s", type=str)
 parser.add_argument("--enemy_hid", "-eh", type=bool, default=False)
-
+parser.add_argument("--layout", "-l", type=str, default="")
 
 args = parser.parse_args()
 NUM_FEAT = len(LearnBase.LearnerBase.Features._fields)
@@ -146,9 +146,13 @@ def evaluate(indiv):
     blue_team = ["-b", "baselineTeam"]  # will play against baseline for now, can change later
 
     red_opts = ["--redOpts", "weightvec1=" + str(indiv.offense) + ";weightvec2=" + str(indiv.defense)]
-
-    game_opts = ["-q", "-c", "-l", "tinyCapture", "-n",
-                 "3"]  # no graphics, because no one there to watch! also catch exceptions
+    if args.layout:
+        # have a layout
+        layout = args.layout
+    else:
+        layout = "tinyCapture"
+    game_opts = ["-q", "-c", "-l", layout, "-n", "3"]
+    # no graphics, because no one there to watch! also catch exceptions
     log("starting games at " + ltime + " on " + str(os.getpid()))
     score_food_list = capture.main_run(red_team + blue_team + red_opts + game_opts)
     log("ending games started at " + ltime + " on " + str(os.getpid()))
@@ -261,7 +265,7 @@ if __name__ == '__main__':
             print k, v
     log("cleanup")
     print "logbook length ", len(logbook)
-    prefix = "logs/pop_logbook/"
+    prefix = "logs/complex_pop_logbook/"
     if args.type == "o":
         prefix += "Offense/"
     elif args.type == "d":
@@ -286,4 +290,3 @@ if __name__ == '__main__':
 
     print "DONE"
 
-    # TODO: !!!!!!!! make sure numEaten is working properly
