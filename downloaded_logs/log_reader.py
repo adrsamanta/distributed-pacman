@@ -5,10 +5,11 @@ import numpy
 from deap import tools, creator, base, algorithms
 from GeneticClasses import Team, Fitness0
 
-server = "server2"
+server = "server1"
+subdir = "enemy_invisible"
 
 os.chdir(
-    "C:\\Users\\alan.Blackbird\\Desktop\\Documents\\CS 6366\\distributed-pacman\\downloaded_logs\\" + server + "\\logs\\pop_logbook")
+    "C:\\Users\\alan.Blackbird\\Desktop\\Documents\\CS 6366\\distributed-pacman\\downloaded_logs\\" + server + "\\" + subdir + "\\logs\\pop_logbook")
 
 p = os.getcwd()
 # weight structure:

@@ -14,8 +14,8 @@ parser.add_argument("num_rounds", type=int)
 parser.add_argument("--start_val", "-sv", type=int, default=0)
 parser.add_argument("--start_pop", "-sp", type=file)
 parser.add_argument("--pipe_pop", "-p", action="store_true")
-parser.add_argument("-d", action="store_true")
-parser.add_argument("-ho", action="store_true")
+parser.add_argument("-d", action="store_true", help="debug")
+parser.add_argument("-ho", action="store_true", help="home")
 parser.add_argument("--type", "-t", choices=["s", "o", 'd'], default="s", type=str)
 
 

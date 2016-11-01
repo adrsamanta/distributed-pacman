@@ -74,7 +74,7 @@ DUMP_FOOD_ON_DEATH = True  # if we have the gameplay element that dumps dots on 
 
 MUST_RETURN_HOME = False  # if you have to return home for score to increase
 
-ENEMY_HIDDEN = True
+ENEMY_HIDDEN = False
 
 SCARED_TIME = 40
 
