@@ -110,6 +110,13 @@ def createTeam(firstIndex, secondIndex, isRed,
 
 class HLA:
     #due to dependency issues, set the members of HLA inside HardwiredAgent
+    goHome = None
+    runAway = None
+    eatFood = None
+    chaseEnemy = None
+    eatCapsule = None
+    default = None
+
     pass
     # set each of the HLAs to the method in HardwiredAgent that defines the behavior in that case
     # calling each of these should just require passing in the current object as the self parameter
@@ -135,7 +142,7 @@ class HardwiredAgent(BaseAgent):
         HLA.eatFood = HardwiredAgent.eatFoodAction
         HLA.chaseEnemy = HardwiredAgent.chasePacmanAction
         HLA.eatCapsule = HardwiredAgent.eatCapsuleAction
-
+        HLA.default = HardwiredAgent.pathToHome
         '''
         Make sure you do not delete the following line. If you would like to
         use Manhattan distances instead of maze distances in order to save
@@ -231,6 +238,7 @@ class HardwiredAgent(BaseAgent):
 
     def pickHighLevelAction(self, gameState):
         features=self.getFeatures(gameState)
+
 
         if self.offensive:
             print "offensive"
@@ -339,7 +347,7 @@ class HardwiredAgent(BaseAgent):
         path, _ = search.astar(prob) #use a-star, null heuristic
         if not path:
             #hollup
-            HLA.goHome(self, gamestate)
+            HLA.default(self, gamestate)
             pass
         return path[0]
         #TODO: consider adding option to abandon this choice if it's shitty
@@ -361,7 +369,7 @@ class HardwiredAgent(BaseAgent):
         self.data.set_food_target(self.index, target)
         if path == None:
             #no good food to eat, just go home
-            return HLA.goHome(self, gamestate)
+            return HLA.default(self, gamestate)
         else:
             return path[0]
 
