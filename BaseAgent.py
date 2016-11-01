@@ -1,5 +1,7 @@
 import random
 
+import sys
+
 from AgentExternals import *
 from captureAgents import CaptureAgent
 from game_code.capture import SIGHT_RANGE
@@ -197,7 +199,19 @@ class BaseAgent(CaptureAgent, object):
         if not gamestate.getAgentState(enemyI).isPacman:
             return 0
         elif not beliefs and enemyI in self.knownEnemies:
-            return self.data.e_borderDistances[self.knownEnemies[enemyI]]
+            if self.knownEnemies[enemyI] in self.data.e_borderDistances:
+                return self.data.e_borderDistances[self.knownEnemies[enemyI]]
+            else:
+                grid = gamestate.getWalls()
+                print >> sys.stderr, self.knownEnemies[enemyI], " was not in the enemy border distances"
+                print >> sys.stderr, "grid width=", grid.width
+                e_halfway = (grid.width / 2)
+                print >> sys.stderr, "e_halfway=", e_halfway
+                self.data.e_borderDistances[self.knownEnemies[enemyI]] = \
+                    min((self.getMazeDistance(self.knownEnemies[enemyI], borderPos)
+                         for borderPos in self.data.e_borderPositions))
+                return self.data.e_borderDistances[self.knownEnemies[enemyI]]
+
         else:
             if not beliefs:
                 beliefs = self.getmDistribs(enemyI)

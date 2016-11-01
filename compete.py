@@ -80,6 +80,7 @@ composed_scores = 0
 for i in range(rounds):
     score = random.choice(scoreAgents)
     score_scores += run_game(score, None, None, blue_gen=False)
+    print("\ncomposed\n")
     offe = random.choice(offenseAgents)
     defe = random.choice(defenseAgents)
     composed_scores += run_game(make_team(offe, defe), None, None, blue_gen=False)
