@@ -203,6 +203,10 @@ class BaseAgent(CaptureAgent, object):
             if enemyPos in self.data.e_borderDistances:
                 return self.data.e_borderDistances[enemyPos]
             else:
+                # so this is all from when I was doing random layouts and kept getting distancer errors.
+                # for some reason, I kept getting queries with walls in them. No idea why.
+                # finally just decided to bag it and use capture layout for now.
+                # same comment exists in getMazeDistance
                 grid = gamestate.getWalls()
                 print >> sys.stderr, enemyPos, " was not in the enemy border distances"
                 print >> sys.stderr, "grid width=", grid.width
@@ -211,7 +215,8 @@ class BaseAgent(CaptureAgent, object):
                 print >> sys.stderr, "enemy pos has wall : ", gamestate.hasWall(enemyPos[0], enemyPos[1])
 
                 mind = grid.width * 3
-                to_rem = []
+                to_rem = []  # boarder pos spaces that are walls and should be removed
+                #technically shouldnt ever happen, but it did, no idea why, can't fix it
                 for bp in self.data.e_borderPositions:
                     if gamestate.hasWall(bp[0], bp[1]):
                         print >> sys.stderr, bp, " in boarder pos and is wall resolving problem with ", enemyPos

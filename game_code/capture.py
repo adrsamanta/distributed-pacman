@@ -52,6 +52,7 @@ import imp
 import random
 import sys
 
+import AgentExternals
 import util
 from game_code import keyboardAgents, textDisplay, mazeGenerator, layout
 from game_code.game import Actions
@@ -1026,6 +1027,8 @@ def runGames(layouts, agents, display, length, numGames, record, numTraining, re
         print "starting game"
         g.run()
         print "game done"
+        AgentExternals.TeamData.RedData = None
+        AgentExternals.TeamData.BlueData = None
         if not beQuiet: games.append(g)
 
         g.record = None

@@ -249,6 +249,12 @@ class CaptureAgent(Agent):
     If distancer.getMazeDistances() has been called, then maze distances are available.
     Otherwise, this just returns Manhattan distance.
     """
+
+    # so this is all from when I was doing random layouts and kept getting distancer errors.
+    # for some reason, I kept getting queries with walls in them. No idea why.
+    # finally just decided to bag it and use capture layout for now.
+
+    # try just the way its supposed to work
     try:
       d = self.distancer.getDistance(pos1, pos2)
       return d
@@ -256,23 +262,24 @@ class CaptureAgent(Agent):
       print >> sys.stderr, "Couldn't find distance from ", pos1, " to ", pos2, " because ", e.message
       d = -1
 
+    #that failed, try calculating the distances again
     if d == -1:
       layout = self.getCurrentObservation().data.layout
       allNodes = layout.walls.asList(False)
-      if pos1 not in allNodes:
+      if pos1 not in allNodes:  #check to make sure pos1 is a valid space
         print >> sys.stderr, pos1, " not a valid space "
-      elif pos2 not in allNodes:
+      elif pos2 not in allNodes:  #check to make sure pos2 is a valid space
         print >> sys.stderr, pos2, " not a valid space "
-      else:
+      else:  #good, they both were, continue on
         distances = self.distancer._distances
         distanceCalculator.calcDists(pos2, layout, allNodes, distances)
-      try:
-        d = self.distancer.getDistance(pos1, pos2)
-        return d
-      except Exception, e:
-        print >> sys.stderr, "Couldn't find distance from ", pos1, " to ", pos2, " because ", e.message
-        return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
-
+        try:
+          d = self.distancer.getDistance(pos1, pos2)
+          return d
+        except Exception, e:
+          print >> sys.stderr, "Couldn't find distance from ", pos1, " to ", pos2, " because ", e.message
+          return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
+          #shit, one wasn't. This case will cause major problems. No idea what to do about it so I'm just gonna leave it
 
   def getPreviousObservation(self):
     """
