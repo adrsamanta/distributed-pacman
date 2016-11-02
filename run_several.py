@@ -5,7 +5,7 @@ import argparse
 
 today_folder = '{:%m.%d}'.format(datetime.now())
 
-program = "python -m scoop GeneticLearner.py -ngen 18 -s 10 -r 5 -eh False"
+program = "python -m scoop GeneticLearner.py -ngen 15 -s 10 -r 5 -eh False"
 prefix = "OEL/" + today_folder + "/"
 # prefix = "OEL/lr2/"
 parser = argparse.ArgumentParser()
@@ -19,6 +19,7 @@ parser.add_argument("-ho", action="store_true", help="home")
 parser.add_argument("--type", "-t", choices=["s", "o", 'd'], default="s", type=str)
 parser.add_argument("--layout", "-l", type=str, default="")
 
+# blox and medium are good possible layout choices
 
 args = parser.parse_args()
 rounds = args.num_rounds
