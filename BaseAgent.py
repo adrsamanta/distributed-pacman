@@ -214,7 +214,7 @@ class BaseAgent(CaptureAgent, object):
                 to_rem = []
                 for bp in self.data.e_borderPositions:
                     if gamestate.hasWall(bp[0], bp[1]):
-                        print >> sys.stderr, bp, " in boarder pos and is wall"
+                        print >> sys.stderr, bp, " in boarder pos and is wall resolving problem with ", enemyPos
                         to_rem.append(bp)
                         continue
                     # ok so both are legal positions
@@ -223,8 +223,8 @@ class BaseAgent(CaptureAgent, object):
                         if d < mind:
                             mind = d
                     except Exception, e:
-                        print >> sys.stderr, "Still got exception complaining that ", e.message
-
+                        print >> sys.stderr, "Still got exception complaining that ", e.message, " about ", enemyPos
+                print >> sys.stderr, "distance to ", enemyPos, " found"
                 self.data.e_borderDistances[enemyPos] = mind
 
                 for n in to_rem:

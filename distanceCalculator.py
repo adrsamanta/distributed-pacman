@@ -112,42 +112,45 @@ def computeDistances(layout):
     distances = {}
     allNodes = layout.walls.asList(False)
     for source in allNodes:
-        dist = {}
-        closed = {}
-        for node in allNodes:
-            dist[node] = sys.maxint
-        import util
-        queue = util.PriorityQueue()
-        queue.push(source, 0)
-        dist[source] = 0
-        while not queue.isEmpty():
-            node = queue.pop()
-            if node in closed:
-                continue
-            closed[node] = True
-            nodeDist = dist[node]
-            adjacent = []
-            x, y = node
-            if not layout.isWall((x,y+1)):
-                adjacent.append((x,y+1))
-            if not layout.isWall((x,y-1)):
-                adjacent.append((x,y-1) )
-            if not layout.isWall((x+1,y)):
-                adjacent.append((x+1,y) )
-            if not layout.isWall((x-1,y)):
-                adjacent.append((x-1,y))
-            for other in adjacent:
-                if not other in dist:
-                    continue
-                oldDist = dist[other]
-                newDist = nodeDist+1
-                if newDist < oldDist:
-                    dist[other] = newDist
-                    queue.push(other, newDist)
-        for target in allNodes:
-            distances[(target, source)] = dist[target]
+        calcDists(source, layout, allNodes, distances)
     return distances
 
+
+def calcDists(source, layout, allNodes, distances):
+    dist = {}
+    closed = {}
+    for node in allNodes:
+        dist[node] = sys.maxint
+    import util
+    queue = util.PriorityQueue()
+    queue.push(source, 0)
+    dist[source] = 0
+    while not queue.isEmpty():
+        node = queue.pop()
+        if node in closed:
+            continue
+        closed[node] = True
+        nodeDist = dist[node]
+        adjacent = []
+        x, y = node
+        if not layout.isWall((x, y + 1)):
+            adjacent.append((x, y + 1))
+        if not layout.isWall((x, y - 1)):
+            adjacent.append((x, y - 1))
+        if not layout.isWall((x + 1, y)):
+            adjacent.append((x + 1, y))
+        if not layout.isWall((x - 1, y)):
+            adjacent.append((x - 1, y))
+        for other in adjacent:
+            if not other in dist:
+                continue
+            oldDist = dist[other]
+            newDist = nodeDist + 1
+            if newDist < oldDist:
+                dist[other] = newDist
+                queue.push(other, newDist)
+    for target in allNodes:
+        distances[(target, source)] = dist[target]
 
 def getDistanceOnGrid(distances, pos1, pos2):
     key = (pos1, pos2)

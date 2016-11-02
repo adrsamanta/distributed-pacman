@@ -17,6 +17,8 @@
 """
 import random
 
+import sys
+
 import distanceCalculator
 import util
 from game_code.game import Agent
@@ -247,8 +249,29 @@ class CaptureAgent(Agent):
     If distancer.getMazeDistances() has been called, then maze distances are available.
     Otherwise, this just returns Manhattan distance.
     """
-    d = self.distancer.getDistance(pos1, pos2)
-    return d
+    try:
+      d = self.distancer.getDistance(pos1, pos2)
+    except Exception, e:
+      print >> sys.stderr, "Couldn't find distance from ", pos1, " to ", pos2, " because ", e.message
+      d = -1
+
+    if d == -1:
+      layout = self.getCurrentObservation().data.layout
+      allNodes = layout.walls.asList(False)
+      if pos1 not in allNodes:
+        print >> sys.stderr, pos1, " not a valid space "
+      elif pos2 not in allNodes:
+        print >> sys.stderr, pos2, " not a valid space "
+      else:
+        distances = self.distancer._distances
+        distanceCalculator.calcDists(pos2, layout, allNodes, distances)
+      try:
+        d = self.distancer.getDistance(pos1, pos2)
+        return d
+      except Exception, e:
+        print >> sys.stderr, "Couldn't find distance from ", pos1, " to ", pos2, " because ", e.message
+        return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
+
 
   def getPreviousObservation(self):
     """
