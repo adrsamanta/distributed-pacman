@@ -1,0 +1,2 @@
+Memory leak probably related to map size
+    got worse when map size increases, crashed earlier
