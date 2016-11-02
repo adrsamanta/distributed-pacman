@@ -225,7 +225,7 @@ class BaseAgent(CaptureAgent, object):
                     except Exception, e:
                         print >> sys.stderr, "Still got exception complaining that ", e.message
 
-                self.data.e_borderPositions[enemyPos] = mind
+                self.data.e_borderDistances[enemyPos] = mind
 
                 for n in to_rem:
                     self.data.e_borderPositions.remove(n)

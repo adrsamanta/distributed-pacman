@@ -32,6 +32,8 @@ scoreAgents = pickle.load(args.score_file)
 offenseAgents = pickle.load(args.offense_file)
 defenseAgents = pickle.load(args.defense_file)
 
+capture.ENEMY_HIDDEN = True  ####MODIFY IF NEEDED
+
 # modify as needed
 
 # bestScore = tools.selBest(scoreAgents, 1)[0]
@@ -74,6 +76,7 @@ def make_team(offe, defe):
     return creator.ScoreTeam(offe.offense, defe.defense)
 
 
+print("enemy hidden: ", capture.ENEMY_HIDDEN)
 rounds = 10
 score_scores = 0
 composed_scores = 0
