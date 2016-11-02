@@ -251,6 +251,7 @@ class CaptureAgent(Agent):
     """
     try:
       d = self.distancer.getDistance(pos1, pos2)
+      return d
     except Exception, e:
       print >> sys.stderr, "Couldn't find distance from ", pos1, " to ", pos2, " because ", e.message
       d = -1
