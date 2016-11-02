@@ -199,18 +199,40 @@ class BaseAgent(CaptureAgent, object):
         if not gamestate.getAgentState(enemyI).isPacman:
             return 0
         elif not beliefs and enemyI in self.knownEnemies:
-            if self.knownEnemies[enemyI] in self.data.e_borderDistances:
-                return self.data.e_borderDistances[self.knownEnemies[enemyI]]
+            enemyPos = self.knownEnemies[enemyI]
+            if enemyPos in self.data.e_borderDistances:
+                return self.data.e_borderDistances[enemyPos]
             else:
                 grid = gamestate.getWalls()
-                print >> sys.stderr, self.knownEnemies[enemyI], " was not in the enemy border distances"
+                print >> sys.stderr, enemyPos, " was not in the enemy border distances"
                 print >> sys.stderr, "grid width=", grid.width
                 e_halfway = (grid.width / 2)
                 print >> sys.stderr, "e_halfway=", e_halfway
-                self.data.e_borderDistances[self.knownEnemies[enemyI]] = \
-                    min((self.getMazeDistance(self.knownEnemies[enemyI], borderPos)
-                         for borderPos in self.data.e_borderPositions))
-                return self.data.e_borderDistances[self.knownEnemies[enemyI]]
+                print >> sys.stderr, "enemy pos has wall : ", gamestate.hasWall(enemyPos[0], enemyPos[1])
+
+                mind = grid.width * 3
+                to_rem = []
+                for bp in self.data.e_borderPositions:
+                    if gamestate.hasWall(bp[0], bp[1]):
+                        print >> sys.stderr, bp, " in boarder pos and is wall"
+                        to_rem.append(bp)
+                        continue
+                    # ok so both are legal positions
+                    try:
+                        d = self.getMazeDistance(enemyPos, bp)
+                        if d < mind:
+                            mind = d
+                    except Exception, e:
+                        print >> sys.stderr, "Still got exception complaining that ", e.message
+
+                self.data.e_borderPositions[enemyPos] = mind
+
+                for n in to_rem:
+                    self.data.e_borderPositions.remove(n)
+                # self.data.e_borderDistances[enemyPos] = \
+                #     min((self.getMazeDistance(enemyPos, borderPos)
+                #          for borderPos in self.data.e_borderPositions))
+                return self.data.e_borderDistances[enemyPos]
 
         else:
             if not beliefs:
