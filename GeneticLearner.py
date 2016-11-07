@@ -64,6 +64,7 @@ creator.create("ScoreMax", Fitness0, weights=(1.0, 0.0, 0.0))
 creator.create("AteFoodMax", Fitness0, weights=(0., 1., 0.))
 creator.create("EFoodMin", Fitness0, weights=(0., 0., -1.))
 
+# TODO: add seeded or unseeded flag
 creator.create("ScoreTeam", Team, fitness=creator.ScoreMax, type="Score")
 creator.create("OffenseTeam", Team, fitness=creator.AteFoodMax, type="Offense")
 creator.create("DefenseTeam", Team, fitness=creator.EFoodMin, type="Defense")

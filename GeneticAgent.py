@@ -40,6 +40,7 @@ class GeneticAgent(LearnerBase):
         LearnerBase.chooseAction(self, gameState)
         action = self.action_search(gameState)
         self.logger.debug("chose action")
+        # self.displayDistributionsOverPositions(self.data.mDistribs)
         return action
 
     def getUtility(self, gamestate, beliefs):

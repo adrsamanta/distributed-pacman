@@ -5,6 +5,7 @@ import pickle
 from deap import tools, creator
 from GeneticClasses import Team, Fitness0
 from game_code import capture
+import numpy as np
 import random
 
 
@@ -36,9 +37,9 @@ capture.ENEMY_HIDDEN = True  ####MODIFY IF NEEDED
 
 # modify as needed
 
-# bestScore = tools.selBest(scoreAgents, 1)[0]
-# bestOffense = tools.selBest(offenseAgents, 1)[0]
-# bestDefense = tools.selBest(defenseAgents, 1)[0]
+bestScore = tools.selBest(scoreAgents, 1)[0]
+bestOffense = tools.selBest(offenseAgents, 1)[0]
+bestDefense = tools.selBest(defenseAgents, 1)[0]
 
 
 def run_game(score, offe, defe, red_gen=True, blue_gen=True):
@@ -78,18 +79,39 @@ def make_team(offe, defe):
 
 print("enemy hidden: ", capture.ENEMY_HIDDEN)
 rounds = 10
-score_scores = 0
-composed_scores = 0
+score_scores = []
+composed_scores = []
 for i in range(rounds):
     score = random.choice(scoreAgents)
-    score_scores += run_game(score, None, None, blue_gen=False)
+    score_scores.append(run_game(score, None, None, blue_gen=False))
     print("\ncomposed\n")
     offe = random.choice(offenseAgents)
     defe = random.choice(defenseAgents)
-    composed_scores += run_game(make_team(offe, defe), None, None, blue_gen=False)
+    composed_scores.append(run_game(make_team(offe, defe), None, None, blue_gen=False))
     print('\n\n')
 
-print("Average score team score: ", score_scores / rounds)
-print("Average composed score: ", composed_scores / rounds)
+# print("Average score team score: ", np.mean(score_scores))
+# print("Average composed score: ", np.mean(composed_scores))
 
-    # run_game(bestScore, bestOffense, bestDefense, True, True)
+stats = tools.Statistics()
+stats.register("avg", np.mean, axis=0)
+stats.register("std", np.std, axis=0)
+stats.register("min", np.min, axis=0)
+stats.register("max", np.max, axis=0)
+stats.register('median', np.median)
+
+score_stats = stats.compile(score_scores)
+composed_stats = stats.compile(composed_scores)
+
+keys = ['min', 'avg', 'median', 'std', 'max']
+print("score team: ")
+for k in keys:
+    print(k, score_stats[k])
+
+print('\n\nComposed Team: ')
+for k in keys:
+    print(k, composed_stats[k])
+
+
+    # run_game(bestScore, bestOffense, bestDefense, True, False)
+    # run_game(make_team(bestOffense, bestDefense), None, None, True, False)
