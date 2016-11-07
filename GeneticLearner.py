@@ -268,7 +268,7 @@ if __name__ == '__main__':
             print k, v
     log("cleanup")
     print "logbook length ", len(logbook)
-    prefix = "logs/complex_pop_logbook/"
+    prefix = "logs/intelligent_agent_pl/"
     if args.type == "o":
         prefix += "Offense/"
     elif args.type == "d":
