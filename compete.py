@@ -33,7 +33,7 @@ scoreAgents = pickle.load(args.score_file)
 offenseAgents = pickle.load(args.offense_file)
 defenseAgents = pickle.load(args.defense_file)
 
-capture.ENEMY_HIDDEN = True  ####MODIFY IF NEEDED
+capture.ENEMY_HIDDEN = True  ####use commandline arg now
 
 # modify as needed
 

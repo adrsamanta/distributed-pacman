@@ -47,7 +47,7 @@ CXPB = args.cxpb  # crossover probability
 MUTPB = args.mutpb  # mutation probability
 INDPB = args.indpb  # probability of mutating a given feature
 
-capture.ENEMY_HIDDEN = args.enemy_hid
+
 
 debug = args.d
 
@@ -144,8 +144,8 @@ def evaluate(indiv):
     # so offensive agent is at index 0
     ltime = '{:%m-%d_%H.%M.%S}'.format(datetime.now())
     red_team = ["-r", "GeneticAgent"]
-    blue_team = ["-b", "baselineTeam"]  # will play against baseline for now, can change later
-
+    # blue_team = ["-b", "baselineTeam"]  # will play against baseline for now, can change later
+    blue_team = ["-b", "HLANoPlan"]
     red_opts = ["--redOpts", "weightvec1=" + str(indiv.offense) + ";weightvec2=" + str(indiv.defense)]
     if args.layout:
         # have a layout
@@ -153,6 +153,8 @@ def evaluate(indiv):
     else:
         layout = "tinyCapture"
     game_opts = ["-q", "-c", "-l", layout, "-n", "3"]
+    if not args.enemy_hid:
+        game_opts.append("-v")
     # no graphics, because no one there to watch! also catch exceptions
     log("starting games at " + ltime + " on " + str(os.getpid()))
     score_food_list = capture.main_run(red_team + blue_team + red_opts + game_opts)

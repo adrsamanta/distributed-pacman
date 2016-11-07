@@ -1013,7 +1013,7 @@ def runGames(layouts, agents, display, length, numGames, record, numTraining, re
              muteAgents=False, catchExceptions=False):
     rules = CaptureRules()
     games = []
-
+    print "Enemy Hidden: ", ENEMY_HIDDEN
     if numTraining > 0:
         print 'Playing %d training games' % numTraining
 
@@ -1030,7 +1030,7 @@ def runGames(layouts, agents, display, length, numGames, record, numTraining, re
         g = rules.newGame(layout, agents, gameDisplay, length, muteAgents, catchExceptions)
         print "starting game"
         g.run()
-        print "game done"
+
         AgentExternals.TeamData.RedData = None
         AgentExternals.TeamData.BlueData = None
         if not beQuiet: games.append(g)
