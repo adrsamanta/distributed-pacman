@@ -36,7 +36,7 @@ class HardwiredNPAgent(HardwiredAgent):
     def pickHighLevelAction(self, gameState):
         features = self.getFeatures(gameState)
         if self.offensive:
-            print "offensive"
+            # print "offensive"
             if features['score'] >= 4 and self.getScaredMovesRemaining(gameState) == 0:
                 return HLA.chaseEnemy
             elif self.getCapsules(gameState) and (features["distToNearestCapsule"] < 4 or features["score"] < 0):
@@ -44,7 +44,7 @@ class HardwiredNPAgent(HardwiredAgent):
             else:
                 return HLA.eatFood
         else:
-            print "defensive"
+            # print "defensive"
             if self.getScaredMovesRemaining(gameState) == 0 and features["numEnemyPacmen"] > 0:
                 return HLA.chaseEnemy
             elif self.getCapsules(gameState) and (features["distToNearestCapsule"] < 4 or features["score"] < 0):
@@ -56,7 +56,7 @@ class HardwiredNPAgent(HardwiredAgent):
         return gameState.getAgentState(i).isPacman
 
     def chasePacmanAction(self, gameState):
-        print "Chasing pacman"
+        # print "Chasing pacman"
         epac = [e for e in self.getOpponents(gameState) if self.isPacman(gameState, e)]
         if not epac:
             # no enemy pacmen
@@ -70,7 +70,7 @@ class HardwiredNPAgent(HardwiredAgent):
         return nextPosl[bestPos]  # return the action corresponding to bestpos
 
     def goToBorder(self, gameState):
-        print "going to border"
+        # print "going to border"
         nextPosl = {game.Actions.getSuccessor(self.getMyPos(gameState), action): action for action in
                     gameState.getLegalActions(self.index)}
         teammatePos = self.getTeammatePositions(gameState)

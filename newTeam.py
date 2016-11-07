@@ -230,8 +230,8 @@ class HardwiredAgent(BaseAgent):
             # raw_input("Action="+bestAction)
             # print "\n"
             pass
-        print "Action="+bestAction
-        print "\n"
+        # print "Action="+bestAction
+        # print "\n"
         return bestAction
         # return random.choice(gameState.getLegalActions(self.index))
         #return self.offensiveReflex(gameState)
@@ -241,7 +241,7 @@ class HardwiredAgent(BaseAgent):
 
 
         if self.offensive:
-            print "offensive"
+            # print "offensive"
             if features["foodEatenBySelf"]>4 or (features["score"]<0 and features["foodEatenBySelf"]+features["score"]>=0):
                 return HLA.goHome
             elif max(features["enemyPacmanFood"])>features["score"]>0 and self.getScaredMovesRemaining(gameState)==0:
@@ -251,7 +251,7 @@ class HardwiredAgent(BaseAgent):
             else:
                 return HLA.eatFood
         else:
-            print "defensive"
+            # print "defensive"
             if max(features["enemyPacmanFood"])>=1 and self.getScaredMovesRemaining(gameState)==0:
                 #TODO: fix scared moves remaining timer
                 return HLA.chaseEnemy
@@ -278,7 +278,7 @@ class HardwiredAgent(BaseAgent):
 
     #called when the agent should procede home
     def pathToHome(self, gamestate, beliefs):
-        print "Going home"
+        # print "Going home"
         #find shortest path to home
         #generate exclusion zones around the enemies, find shortest path that doesn't go through an exclusion zone
 
@@ -316,7 +316,7 @@ class HardwiredAgent(BaseAgent):
     #called when the agent should chase the enemy pacman
     #precondition: At least 1 enemy is a pacman
     def chasePacmanAction(self, gameState):
-        print "Chasing pacman"
+        # print "Chasing pacman"
         #just make it blindly chase the enemy for now, work on more intelligent chasing later
         #
         # target = None
@@ -340,7 +340,7 @@ class HardwiredAgent(BaseAgent):
 
     #called when the agent should attempt to eat a capsule
     def eatCapsuleAction(self, gamestate):
-        print "Eating capsule"
+        # print "Eating capsule"
         ez = self.genExclusionZones(gamestate)
         prob = PacmanPosSearch(self.getMyPos(gamestate), self.getCapsules(gamestate), gamestate, ez)
         #TODO: add a heuristic using dist to nearest capsule
@@ -354,7 +354,7 @@ class HardwiredAgent(BaseAgent):
 
     #called when the agent should find some food to eat and eat it
     def eatFoodAction(self, gamestate):
-        print "Eating some dope ass food"
+        # print "Eating some dope ass food"
         ez = self.genExclusionZones(gamestate)
         teammate_targets=set()
         for teammate in self.getTeam(gamestate):

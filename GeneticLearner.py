@@ -32,7 +32,7 @@ parser.add_argument("-d", action="store_true")
 parser.add_argument("--pop_file", "-pf", type=file)
 parser.add_argument("--pop_out", "-po", type=str)
 parser.add_argument("--type", "-t", choices=["s", "o", 'd'], default="s", type=str)
-parser.add_argument("--enemy_hid", "-eh", type=bool, default=False)
+parser.add_argument("--enemy_hid", "-eh", action='store_true')
 parser.add_argument("--layout", "-l", type=str, default="")
 
 args = parser.parse_args()
