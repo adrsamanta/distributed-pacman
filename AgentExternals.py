@@ -87,6 +87,7 @@ class TeamData:
         self.offensive = not self.offensive
         return self.offensive
 
+
 #class that implements SearchProblem from search.py
 #getCostOfActions method not implemented because it doesn't make sense for this class as most actions don't have cost
 class PacmanPosSearch(search.SearchProblem):
@@ -116,3 +117,4 @@ class PacmanPosSearch(search.SearchProblem):
 
     def getStartState(self):
         return self.start
+

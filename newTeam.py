@@ -277,7 +277,7 @@ class HardwiredAgent(BaseAgent):
         return hla(self, gameState)
 
     #called when the agent should procede home
-    def pathToHome(self, gamestate):
+    def pathToHome(self, gamestate, beliefs):
         print "Going home"
         #find shortest path to home
         #generate exclusion zones around the enemies, find shortest path that doesn't go through an exclusion zone

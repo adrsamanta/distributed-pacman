@@ -100,9 +100,12 @@ class BaseAgent(CaptureAgent, object):
     # <editor-fold desc="Utility Info">
 
     def getDistToNearestTeammate(self, gameState):
-        return min([self.getMazeDistance(gameState.getAgentState(self.index).getPosition(),
-                                         gameState.getAgentState(agent).getPosition()) for agent in
-                    self.getTeam(gameState) if agent != self.index])
+        return min([self.getMazeDistance(gameState.getAgentState(self.index).getPosition(), position) for position in
+                    self.getTeammatePositions(gameState)])
+
+    def getTeammatePositions(self, gameState):
+        return [gameState.getAgentState(agent).getPosition() for agent in
+                self.getTeam(gameState) if agent != self.index]
 
     def getDistToNearestCapsule(self, gameState):
         try:

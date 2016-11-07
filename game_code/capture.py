@@ -853,11 +853,15 @@ def readCommand(argv):
                       help=default('How many episodes are training (suppresses output)'), default=0)
     parser.add_option('-c', '--catchExceptions', action='store_true', default=False,
                       help='Catch exceptions and enforce time limits')
+    parser.add_option('-v', '--enemyVisible', action='store_true', default=False,
+                      help='Give each team perfect vision of the enemy')
+
 
     options, otherjunk = parser.parse_args(argv)
     assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
     args = dict()
-
+    global ENEMY_HIDDEN
+    ENEMY_HIDDEN = not options.enemyVisible
     # Choose a display format
     # if options.pygame:
     #   import pygameDisplay
