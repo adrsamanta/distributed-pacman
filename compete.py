@@ -78,15 +78,21 @@ def make_team(offe, defe):
 
 
 print("enemy hidden: ", capture.ENEMY_HIDDEN)
-rounds = 10
+rounds = min(len(scoreAgents), len(offenseAgents), len(defenseAgents))
+random.shuffle(scoreAgents)
+random.shuffle(offenseAgents)
+random.shuffle(defenseAgents)
 score_scores = []
 composed_scores = []
 for i in range(rounds):
-    score = random.choice(scoreAgents)
+    # score = random.choice(scoreAgents)
+    score = scoreAgents[i]
     score_scores.append(run_game(score, None, None, blue_gen=False))
     print("\ncomposed\n")
-    offe = random.choice(offenseAgents)
-    defe = random.choice(defenseAgents)
+    # offe = random.choice(offenseAgents)
+    # defe = random.choice(defenseAgents)
+    offe = offenseAgents[i]
+    defe = defenseAgents[i]
     composed_scores.append(run_game(make_team(offe, defe), None, None, blue_gen=False))
     print('\n\n')
 
@@ -100,17 +106,17 @@ stats.register("min", np.min, axis=0)
 stats.register("max", np.max, axis=0)
 stats.register('median', np.median)
 
-score_stats = stats.compile(score_scores)
-composed_stats = stats.compile(composed_scores)
-
-keys = ['min', 'avg', 'median', 'std', 'max']
-print("score team: ")
-for k in keys:
-    print(k, score_stats[k])
-
-print('\n\nComposed Team: ')
-for k in keys:
-    print(k, composed_stats[k])
+# score_stats = stats.compile(score_scores)
+# composed_stats = stats.compile(composed_scores)
+#
+# keys = ['min', 'avg', 'median', 'std', 'max']
+# print("score team: ")
+# for k in keys:
+#     print(k, score_stats[k])
+#
+# print('\n\nComposed Team: ')
+# for k in keys:
+#     print(k, composed_stats[k])
 
 
     # run_game(bestScore, bestOffense, bestDefense, True, False)
