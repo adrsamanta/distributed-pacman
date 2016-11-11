@@ -997,7 +997,7 @@ def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamNa
     display.redTeam = redTeamName
     display.blueTeam = blueTeamName
     display.initialize(state.data)
-
+    import time
     for action in actions:
         # Execute the action
         state = state.generateSuccessor(*action)
@@ -1005,8 +1005,9 @@ def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamNa
         display.update(state.data)
         # Allow for game specific conditions (winning, losing, etc.)
         rules.process(state, game)
+        time.sleep(.2)
 
-    display.finish()
+        # display.finish()
 
 
 def runGames(layouts, agents, display, length, numGames, record, numTraining, redTeamName, blueTeamName,
@@ -1038,9 +1039,10 @@ def runGames(layouts, agents, display, length, numGames, record, numTraining, re
         g.record = None
         if record:
             import cPickle
+            import game
             # fname = ('recorded-game-%d' % (i + 1)) +  '-'.join([str(t) for t in time.localtime()[1:6]])
             # f = file(fname, 'w')
-            components = {'layout': layout, 'agents': [game.Agent() for a in agents], 'actions': g.moveHistory,
+            components = {'layout': layout, 'agents': [game.Agent(a) for a in agents], 'actions': g.moveHistory,
                           'length': length, 'redTeamName': redTeamName, 'blueTeamName': blueTeamName}
             # f.close()
             print "recorded"

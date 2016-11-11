@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("num_rounds", type=int)
 parser.add_argument("--start_val", "-sv", type=int, default=0)
-parser.add_argument("--start_pop", "-sp", type=file)
+parser.add_argument("--start_pop", "-sp", type=str)
 parser.add_argument("--pipe_pop", "-p", action="store_true")
 parser.add_argument("-d", action="store_true", help="debug")
 parser.add_argument("-ho", action="store_true", help="home")
@@ -40,7 +40,8 @@ elif args.type == "d":
     prefix += "defense_"
 
 if args.start_pop:
-    print "not implemented yet you fool"
+    old_program = program
+    program += " -pf " + args.start_pop
 
 tmp_pop_file = "rs_tmp_pop.file"
 
@@ -54,6 +55,9 @@ for i in range(start, start + rounds):
     print "finished call", i
     if i == 0 and args.pipe_pop:
         # only after first call, start piping the pop
-        program += " -pf " + tmp_pop_file
+        if args.start_pop:
+            program = old_program + " -pf " + tmp_pop_file
+        else:
+            program += " -pf " + tmp_pop_file
 
 print "done"
