@@ -59,7 +59,7 @@ def run_game(score, offe, defe, red_gen=True, blue_gen=True):
     game_opts = ["-c", "-l", "tinyCapture"]
 
     if not args.watch:
-        game_opts.extend(["-q", "-n", "3"])
+        game_opts.extend(["-q", "-n", "3", '-v'])
 
     score_food_list = capture.main_run(red_team + blue_team + red_opts + blue_opts + game_opts)
     labels = ["score", "food eaten", "enemy food eaten"]
@@ -106,17 +106,17 @@ stats.register("min", np.min, axis=0)
 stats.register("max", np.max, axis=0)
 stats.register('median', np.median)
 
-# score_stats = stats.compile(score_scores)
-# composed_stats = stats.compile(composed_scores)
-#
-# keys = ['min', 'avg', 'median', 'std', 'max']
-# print("score team: ")
-# for k in keys:
-#     print(k, score_stats[k])
-#
-# print('\n\nComposed Team: ')
-# for k in keys:
-#     print(k, composed_stats[k])
+score_stats = stats.compile(score_scores)
+composed_stats = stats.compile(composed_scores)
+
+keys = ['min', 'avg', 'median', 'std', 'max']
+print("score team: ")
+for k in keys:
+    print(k, score_stats[k])
+
+print('\n\nComposed Team: ')
+for k in keys:
+    print(k, composed_stats[k])
 
 
     # run_game(bestScore, bestOffense, bestDefense, True, False)
