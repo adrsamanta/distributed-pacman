@@ -118,6 +118,12 @@ print('\n\nComposed Team: ')
 for k in keys:
     print(k, composed_stats[k])
 
+print("score scores:")
+print(score_scores)
+print('\n\n')
+print("composed scores:")
+print(composed_scores)
+
 
     # run_game(bestScore, bestOffense, bestDefense, True, False)
     # run_game(make_team(bestOffense, bestDefense), None, None, True, False)
