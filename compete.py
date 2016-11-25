@@ -1,6 +1,6 @@
 from __future__ import print_function
 import argparse
-import os
+import sys
 import pickle
 from deap import tools, creator
 from GeneticClasses import Team, Fitness0
@@ -8,6 +8,7 @@ from game_code import capture
 import numpy as np
 import random
 
+print("score file: ", sys.argv[1])
 
 parser = argparse.ArgumentParser()
 parser.add_argument("score_file", type=file, help="file of score teams")
