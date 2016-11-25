@@ -14,7 +14,7 @@ parser.add_argument("score_file", type=file, help="file of score teams")
 parser.add_argument("offense_file", type=file, help="file of offensive agents")
 parser.add_argument("defense_file", type=file, help="file of defensive agents")
 parser.add_argument("--watch", "-w", action="store_true")
-
+parser.add_argument("--vis", "-v", action="store_true")
 
 args = parser.parse_args()
 
@@ -59,8 +59,9 @@ def run_game(score, offe, defe, red_gen=True, blue_gen=True):
     game_opts = ["-c", "-l", "tinyCapture"]
 
     if not args.watch:
-        game_opts.extend(["-q", "-n", "3", '-v'])
-
+        game_opts.extend(["-q", "-n", "3"])
+    if args.vis:
+        game_opts.append('-v')
     score_food_list = capture.main_run(red_team + blue_team + red_opts + blue_opts + game_opts)
     labels = ["score", "food eaten", "enemy food eaten"]
 
