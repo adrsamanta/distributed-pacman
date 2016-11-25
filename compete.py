@@ -12,8 +12,8 @@ print("score file: ", sys.argv[1])
 
 parser = argparse.ArgumentParser()
 parser.add_argument("score_file", type=file, help="file of score teams")
-parser.add_argument("offense_file", type=file, help="file of offensive agents")
-parser.add_argument("defense_file", type=file, help="file of defensive agents")
+# parser.add_argument("offense_file", type=file, help="file of offensive agents")
+# parser.add_argument("defense_file", type=file, help="file of defensive agents")
 parser.add_argument("--watch", "-w", action="store_true")
 parser.add_argument("--vis", "-v", action="store_true")
 parser.add_argument("--layout", "-l", type=str, default="tinyCapture")
@@ -32,16 +32,18 @@ creator.create("OffenseTeam", Team, fitness=creator.AteFoodMax, type="Offense")
 creator.create("DefenseTeam", Team, fitness=creator.EFoodMin, type="Defense")
 
 scoreAgents = pickle.load(args.score_file)
-offenseAgents = pickle.load(args.offense_file)
-defenseAgents = pickle.load(args.defense_file)
+# offenseAgents = pickle.load(args.offense_file)
+# defenseAgents = pickle.load(args.defense_file)
 
 capture.ENEMY_HIDDEN = True  ####use commandline arg now
 
 # modify as needed
 
 bestScore = tools.selBest(scoreAgents, 1)[0]
-bestOffense = tools.selBest(offenseAgents, 1)[0]
-bestDefense = tools.selBest(defenseAgents, 1)[0]
+
+
+# bestOffense = tools.selBest(offenseAgents, 1)[0]
+# bestDefense = tools.selBest(defenseAgents, 1)[0]
 
 
 def run_game(score, offe, defe, red_gen=True, blue_gen=True):
@@ -83,10 +85,11 @@ def make_team(offe, defe):
 
 
 print("enemy hidden: ", capture.ENEMY_HIDDEN)
-rounds = min(len(scoreAgents), len(offenseAgents), len(defenseAgents))
+# rounds = min(len(scoreAgents), len(offenseAgents), len(defenseAgents))
+rounds = len(scoreAgents)
 random.shuffle(scoreAgents)
-random.shuffle(offenseAgents)
-random.shuffle(defenseAgents)
+# random.shuffle(offenseAgents)
+# random.shuffle(defenseAgents)
 score_scores = []
 composed_scores = []
 for i in range(rounds):
@@ -96,9 +99,9 @@ for i in range(rounds):
     print("\ncomposed\n")
     # offe = random.choice(offenseAgents)
     # defe = random.choice(defenseAgents)
-    offe = offenseAgents[i]
-    defe = defenseAgents[i]
-    composed_scores.append(run_game(make_team(offe, defe), None, None, blue_gen=False))
+    # offe = offenseAgents[i]
+    # defe = defenseAgents[i]
+    # composed_scores.append(run_game(make_team(offe, defe), None, None, blue_gen=False))
     print('\n\n')
 
 # print("Average score team score: ", np.mean(score_scores))
@@ -112,22 +115,22 @@ stats.register("max", np.max, axis=0)
 stats.register('median', np.median)
 
 score_stats = stats.compile(score_scores)
-composed_stats = stats.compile(composed_scores)
+# composed_stats = stats.compile(composed_scores)
 
 keys = ['min', 'avg', 'median', 'std', 'max']
 print("score team: ")
 for k in keys:
     print(k, score_stats[k])
 
-print('\n\nComposed Team: ')
-for k in keys:
-    print(k, composed_stats[k])
+# print('\n\nComposed Team: ')
+# for k in keys:
+#     print(k, composed_stats[k])
 
 print("score scores:")
 print(score_scores)
 print('\n\n')
 print("composed scores:")
-print(composed_scores)
+# print(composed_scores)
 
 
     # run_game(bestScore, bestOffense, bestDefense, True, False)
