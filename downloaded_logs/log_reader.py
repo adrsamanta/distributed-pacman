@@ -6,7 +6,7 @@ from deap import tools, creator, base, algorithms
 from GeneticClasses import Team, Fitness0
 
 server = "server1"
-subdir = "complex_pop_logbook"
+subdir = "intelligent_agent_pl"
 # finaldir = "\\logs\\pop_logbook"
 finaldir = ""
 os.chdir(

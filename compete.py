@@ -125,9 +125,18 @@ for k in keys:
 # print('\n\nComposed Team: ')
 # for k in keys:
 #     print(k, composed_stats[k])
+def getFitness(agent):
+    if agent.type == "Score":
+        return agent.fitness.getValues()[0]
+    if agent.type == "Offense":
+        return agent.fitness.getValues()[1]
+    if agent.type == "Defense":
+        return agent.fitness.getValues()[2]
 
 print("score scores:")
 print(score_scores)
+print('fitnesses:')
+print([getFitness(a) for a in scoreAgents])
 print('\n\n')
 print("composed scores:")
 # print(composed_scores)
