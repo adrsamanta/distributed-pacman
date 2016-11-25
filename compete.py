@@ -16,6 +16,7 @@ parser.add_argument("offense_file", type=file, help="file of offensive agents")
 parser.add_argument("defense_file", type=file, help="file of defensive agents")
 parser.add_argument("--watch", "-w", action="store_true")
 parser.add_argument("--vis", "-v", action="store_true")
+parser.add_argument("--layout", "-l", type=str, default="tinyCapture")
 
 args = parser.parse_args()
 
@@ -57,7 +58,9 @@ def run_game(score, offe, defe, red_gen=True, blue_gen=True):
         blue_team = ["-b", "baselineTeam"]
         blue_opts = []
 
-    game_opts = ["-c", "-l", "tinyCapture"]
+    game_opts = ["-c"]
+    if args.layout:
+        game_opts.extend(['-l', args.layout])
 
     if not args.watch:
         game_opts.extend(["-q", "-n", "3"])
@@ -129,3 +132,6 @@ print(composed_scores)
 
     # run_game(bestScore, bestOffense, bestDefense, True, False)
     # run_game(make_team(bestOffense, bestDefense), None, None, True, False)
+
+
+# compiled_pops/iv_allbest_score compiled_pops/iv_allbest_offense compiled_pops/iv_allbest_defense

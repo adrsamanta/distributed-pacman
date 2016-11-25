@@ -20,6 +20,7 @@ def log(msg):
     # olog.write(msg + "\n")
 
 
+# TODO: Log better what kind of run each run is!
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-ngen", type=int, default=100)
