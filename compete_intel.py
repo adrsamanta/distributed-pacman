@@ -9,7 +9,7 @@ import numpy as np
 import random
 
 print("score file: ", sys.argv[1])
-
+print('argv: ', sys.argv)
 parser = argparse.ArgumentParser()
 parser.add_argument("score_file", type=file, help="file of score teams")
 # parser.add_argument("offense_file", type=file, help="file of offensive agents")
